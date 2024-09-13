@@ -14,9 +14,6 @@ import 'package:gulfcoast/helper/custom_formats.dart';
 import 'package:gulfcoast/helper/firebase_options.dart';
 import 'package:gulfcoast/view/widgets/custom_dialog.dart';
 
-
-bool isMobile = Get.width < 475;
-
 class GetInitial {
   initialApp() async {
     WidgetsFlutterBinding.ensureInitialized();

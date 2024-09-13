@@ -56,7 +56,10 @@ class CustomButton extends StatelessWidget {
             : icon == null
                 ? Text(
                     title.tr,
-                    style: TextStyle(color: textColor, fontSize: size),
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: size,
+                    ),
                   )
                 : Row(
                     children: [

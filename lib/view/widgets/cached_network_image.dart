@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:gulfcoast/helper/get_initial.dart';
 
 extension ImageExtension on num {
   int cacheSize(BuildContext context) {
@@ -49,12 +48,12 @@ class CustomImageNetwork extends StatelessWidget {
         );
       },
       placeholder: (context, url) => Image.asset(
-        assets.logo,
+        '',
         height: height,
         width: width,
       ),
       errorWidget: (context, url, error) => Image.asset(
-        assets.logo,
+        '',
         height: height,
         width: width,
       ),

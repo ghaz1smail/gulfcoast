@@ -12,7 +12,6 @@ class CustomScrollBar extends StatelessWidget {
         thumbColor: WidgetStateProperty.all(Colors.white),
       ),
       child: Scrollbar(
-          thumbVisibility: true,
           controller: scrollController,
           child: SingleChildScrollView(
             controller: scrollController,

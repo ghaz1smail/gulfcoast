@@ -17,6 +17,7 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = Get.width < 500;
     return Scaffold(
         appBar: const CustomAppBar(),
         endDrawer: isMobile ? const DrawerMenu() : null,

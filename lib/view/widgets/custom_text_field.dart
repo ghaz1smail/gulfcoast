@@ -39,11 +39,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           padding: const EdgeInsets.all(5),
           child: Text(
             widget.hint.tr,
-            style: const TextStyle(fontSize: 12, color: Colors.white),
+            style: const TextStyle(fontSize: 22, color: Colors.black),
           ),
         ),
         SizedBox(
-          height: 40,
+          height: 45,
           child: TextFormField(
             autocorrect: false,
             maxLength: widget.length == 0 ? null : widget.length,
@@ -60,7 +60,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 widget.onSubmit!(w);
               }
             },
-            style: const TextStyle(color: Colors.white),
             cursorColor: appTheme.primaryColor,
             autofillHints: widget.autofill,
             controller: widget.controller,
@@ -87,10 +86,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
                               fontWeight: FontWeight.bold)))
                   : null,
               enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    10,
-                  ),
-                  borderSide: const BorderSide(color: Colors.white)),
+                borderRadius: BorderRadius.circular(
+                  10,
+                ),
+              ),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(
                     10,

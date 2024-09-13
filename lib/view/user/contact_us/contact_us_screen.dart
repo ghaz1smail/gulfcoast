@@ -106,6 +106,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = Get.width < 500;
     return CustomScrollBar(
       child: Center(
         child: Container(
