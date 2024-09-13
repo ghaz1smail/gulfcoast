@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "64395988047",
+    "project_id": "gulf-coast-comma",
+    "storage_bucket": "gulf-coast-comma.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64395988047:android:d1bcfa1781299b4c686e3a",
+        "android_client_info": {
+          "package_name": "com.comma.gulf.coast"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsPG5sfsPzR2n0kAMzwMGzQcejmCgyV3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -47,29 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC1X4YwDbwzxsPGoxvM2Vcf48WXcbmpQm8',
-    appId: '1:706122592652:web:327f9bf35f78c418cd66a9',
-    messagingSenderId: '706122592652',
-    projectId: 'infinity-miner',
-    authDomain: 'infinity-miner.firebaseapp.com',
-    storageBucket: 'infinity-miner.appspot.com',
-    measurementId: 'G-20R49DE5HG',
+    apiKey: 'AIzaSyCrrGtlbGKHL9R2s1ZFsoE0NtoBRXrQyFw',
+    appId: '1:64395988047:web:5b0205f94e988b5b686e3a',
+    messagingSenderId: '64395988047',
+    projectId: 'gulf-coast-comma',
+    authDomain: 'gulf-coast-comma.firebaseapp.com',
+    storageBucket: 'gulf-coast-comma.appspot.com',
+    measurementId: 'G-SF778S20H6',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDX04izIrSCG-gpEOYetXpRzWoy5rL7hPU',
-    appId: '1:706122592652:android:306a557a89122d19cd66a9',
-    messagingSenderId: '706122592652',
-    projectId: 'infinity-miner',
-    storageBucket: 'infinity-miner.appspot.com',
+    apiKey: 'AIzaSyAsPG5sfsPzR2n0kAMzwMGzQcejmCgyV3M',
+    appId: '1:64395988047:android:d1bcfa1781299b4c686e3a',
+    messagingSenderId: '64395988047',
+    projectId: 'gulf-coast-comma',
+    storageBucket: 'gulf-coast-comma.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAtjsExPOZVxvF9pIdnISyq9o4THQFct9Y',
-    appId: '1:706122592652:ios:dcbf749697ec64d3cd66a9',
-    messagingSenderId: '706122592652',
-    projectId: 'infinity-miner',
-    storageBucket: 'infinity-miner.appspot.com',
-    iosBundleId: 'com.example.infinityminer',
+    apiKey: 'AIzaSyBiyhMcwvJSWMjeV4u0VY7bq88kE7xouGE',
+    appId: '1:64395988047:ios:70913a412852e6a8686e3a',
+    messagingSenderId: '64395988047',
+    projectId: 'gulf-coast-comma',
+    storageBucket: 'gulf-coast-comma.appspot.com',
+    iosBundleId: 'com.comma.gulfcoast',
   );
 }
