@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gulfcoast/app/app_assets.dart';
 import 'package:gulfcoast/app/app_data.dart';
 import 'package:gulfcoast/app/app_theme.dart';
+import 'package:gulfcoast/controllers/admin_controller.dart';
 import 'package:gulfcoast/controllers/auth_controller.dart';
 import 'package:gulfcoast/controllers/user_controller.dart';
 import 'package:gulfcoast/helper/custom_formats.dart';
@@ -22,6 +23,7 @@ class GetInitial {
     );
     Get.put(AuthController());
     Get.put(UserController());
+    Get.put(AdminController());
     await GetStorage.init();
   }
 }

@@ -9,12 +9,16 @@ import 'package:gulfcoast/models/user_model.dart';
 class AuthController extends GetxController {
   var getStorage = GetStorage();
   TextEditingController emailController = TextEditingController(),
-      passwordController = TextEditingController(),
-      fNameController = TextEditingController(),
-      lNameController = TextEditingController();
+      passwordController = TextEditingController();
   UserModel? userData;
   bool loading = false, admin = false, signIn = true, checking = true;
   AppModel appData = AppModel();
+
+  @override
+  void onInit() {
+    checkUserAvailable();
+    super.onInit();
+  }
 
   checkUserAvailable({bool goHome = true}) async {
     await getCurrentUserData();
@@ -131,8 +135,6 @@ class AuthController extends GetxController {
   clearData() async {
     emailController.clear();
     passwordController.clear();
-    fNameController.clear();
-    lNameController.clear();
   }
 
   getCurrentUserData() async {
@@ -175,8 +177,8 @@ class AuthController extends GetxController {
         if (users.docs.isEmpty) {
           theUsername = username;
         } else {
-          username =
-              (fNameController.text.trim() + users.docs.length.toString());
+          // username =
+          //     (fNameController.text.trim() + users.docs.length.toString());
         }
       });
     }
@@ -186,16 +188,16 @@ class AuthController extends GetxController {
   createUser() async {
     getStorage.write('uid', firebaseAuth.currentUser!.uid);
     userData = UserModel(
-      username: await checkUserName(fNameController.text.trim()),
+      username: '',
       uid: firebaseAuth.currentUser!.uid,
       timestamp: DateTime.now().toIso8601String(),
-      email: emailController.text.trim(),
-      firstName: fNameController.text.trim(),
+      email: '',
+      firstName: '',
       userUsingCode: [],
       type: 'user',
     )
       ..password = customFormats.encryptText(passwordController.text, "pass")
-      ..tags = customFormats.generateTagsCustom(fNameController.text.trim());
+      ..tags = customFormats.generateTagsCustom('');
     await firestore
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
