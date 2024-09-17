@@ -12,8 +12,8 @@ import 'package:gulfcoast/controllers/admin_controller.dart';
 import 'package:gulfcoast/controllers/auth_controller.dart';
 import 'package:gulfcoast/controllers/user_controller.dart';
 import 'package:gulfcoast/helper/custom_formats.dart';
+import 'package:gulfcoast/helper/custom_ui.dart';
 import 'package:gulfcoast/helper/firebase_options.dart';
-import 'package:gulfcoast/view/widgets/custom_dialog.dart';
 
 class GetInitial {
   initialApp() async {
@@ -35,10 +35,12 @@ AppData appData = AppData();
 AppAssets assets = AppAssets();
 AppTheme appTheme = AppTheme();
 GetStorage getStorage = GetStorage();
-CustomDialog customDialog = CustomDialog();
+CustomUi customUi = CustomUi();
 CustomFormats customFormats = CustomFormats();
 AuthController authController = Get.find<AuthController>();
 UserController userController = Get.find<UserController>();
+
+AdminController adminController = Get.find<AdminController>();
 
 Color colorCompute(color) {
   return Color(int.parse(color.toString())).computeLuminance() > 0.5

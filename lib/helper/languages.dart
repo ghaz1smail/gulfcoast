@@ -8,6 +8,7 @@ class Languages extends Translations {
           'email': 'Email',
           'name': 'Name',
           'back': 'Back',
+          'admin': 'Admin',
           'reset_password': 'Reset Password',
           'please_enter_your_name': 'Please enter your name',
           'password': 'Password',
@@ -44,6 +45,10 @@ class Languages extends Translations {
           'success': 'Success :)',
           'opps': 'Opps :|',
           'start': 'Start',
+          'dashboard': 'Dashboard',
+          'users': 'Users',
+          'cars': 'Cars',
+          'enter_vin': 'Enter VIN',
           'thanks_for_your_message,we_will_reply_as_soon_as_possible':
               'Thaks for your message, we will reply as soon as possible',
         },

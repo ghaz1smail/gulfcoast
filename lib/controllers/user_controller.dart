@@ -36,17 +36,20 @@ class UserController extends GetxController {
     if (updateData) {
       update();
     }
-    await Future.delayed(const Duration(milliseconds: 100));
     var uid = getStorage.read('uid');
     Get.log(uid.toString());
     if (uid != null) {
-      if (authController.userData == null) {
-        await authController.getCurrentUserData();
+      await authController.getCurrentUserData();
+
+      if (authController.userData!.type == 'admin') {
+        Get.offAllNamed('/admin');
+      } else {
+        checking = false;
+        update();
       }
-      await Future.delayed(const Duration(milliseconds: 100));
-      checking = false;
-      update();
     } else {
+      await Future.delayed(const Duration(milliseconds: 100));
+
       Get.offAllNamed('/');
     }
   }

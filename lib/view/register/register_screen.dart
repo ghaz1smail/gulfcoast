@@ -13,6 +13,7 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = Get.width < 500;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: GetBuilder(
@@ -21,101 +22,91 @@ class RegisterScreen extends StatelessWidget {
           },
           init: AuthController(),
           builder: (controller) {
-            bool isMobile = Get.width < 500;
-
             return controller.checking
                 ? const CustomLoading()
                 : isMobile
                     ? CustomScrollBar(
-                        child: Column(
-                          children: [
-                            AutofillGroup(
-                              child: Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                padding: const EdgeInsets.all(35),
-                                decoration: BoxDecoration(
-                                  color: appTheme.backgroundColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                width: isMobile ? Get.width : 500,
-                                height: Get.height,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'log_in'.tr,
-                                      style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold),
+                        child: AutofillGroup(
+                          child: Container(
+                            padding: const EdgeInsets.all(35),
+                            decoration: BoxDecoration(
+                              color: appTheme.backgroundColor,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            width: isMobile ? Get.width : 500,
+                            height: Get.height,
+                            child: SafeArea(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'log_in'.tr,
+                                    style: const TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10, top: 25),
+                                    child: CustomTextField(
+                                      hint: 'email',
+                                      controller: controller.emailController,
+                                      autofill: const [AutofillHints.email],
+                                      onSubmit: (w) {
+                                        controller.signingInAuth();
+                                      },
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10, top: 25),
-                                      child: CustomTextField(
-                                        hint: 'email',
-                                        controller: controller.emailController,
-                                        autofill: const [AutofillHints.email],
-                                        onSubmit: (w) {
-                                          controller.signingInAuth();
-                                        },
-                                      ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: CustomTextField(
+                                      hint: 'password',
+                                      secure: true,
+                                      controller: controller.passwordController,
+                                      autofill: const [AutofillHints.password],
+                                      onSubmit: (w) {
+                                        controller.signingInAuth();
+                                      },
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
-                                      child: CustomTextField(
-                                        hint: 'password',
-                                        secure: true,
-                                        controller:
-                                            controller.passwordController,
-                                        autofill: const [
-                                          AutofillHints.password
-                                        ],
-                                        onSubmit: (w) {
-                                          controller.signingInAuth();
-                                        },
-                                      ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: CustomButton(
+                                      loading: controller.loading,
+                                      title: 'log_in',
+                                      function: () async {
+                                        controller.signingInAuth();
+                                      },
+                                      color: appTheme.primaryColor,
+                                      raduis: 10,
+                                      size: 20,
+                                      height: 50,
+                                      width: Get.width,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20),
-                                      child: CustomButton(
-                                        loading: controller.loading,
-                                        title: 'log_in',
-                                        function: () async {
-                                          controller.signingInAuth();
-                                        },
-                                        color: appTheme.primaryColor,
-                                        raduis: 10,
-                                        size: 20,
-                                        height: 50,
-                                        width: Get.width,
-                                      ),
+                                  ),
+                                  if (!controller.loading)
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: TextButton(
+                                          onPressed: () async {
+                                            Get.offAllNamed('/fogot-password');
+                                          },
+                                          child: Text(
+                                            'forgot_password'.tr,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: appTheme.primaryColor),
+                                          )),
                                     ),
-                                    if (!controller.loading)
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: TextButton(
-                                            onPressed: () async {
-                                              Get.offAllNamed(
-                                                  '/fogot-password');
-                                            },
-                                            child: Text(
-                                              'forgot_password'.tr,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: appTheme.primaryColor),
-                                            )),
-                                      ),
-                                    Lottie.asset(
-                                      assets.logIn,
-                                    ),
-                                  ],
-                                ),
+                                  Lottie.asset(assets.logIn,
+                                      width: Get.width,
+                                      height: Get.height * 0.25),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       )
                     : Row(
