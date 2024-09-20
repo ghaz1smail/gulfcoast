@@ -1,18 +1,18 @@
 class AppModel {
   final bool server;
-  final List? admins;
-  final String wallet;
+  final String admin;
+  final String ios;
 
   AppModel({
     this.server = false,
-    this.admins,
-    this.wallet = '',
+    this.admin = '',
+    this.ios = '',
   });
 
   factory AppModel.fromJson(Map json) {
     return AppModel(
         server: json['server'] ?? false,
-        admins: json['admins'] ?? [],
-        wallet: json['wallet'] ?? '');
+        admin: json['admin'] ?? '',
+        ios: json['ios'] ?? '');
   }
 }

@@ -38,6 +38,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "bloc",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/bloc-8.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "boolean_selector",
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
@@ -248,6 +254,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "flutter_bloc",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/flutter_bloc-8.1.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_cache_manager",
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/flutter_cache_manager-3.4.1",
       "packageUri": "lib/",
@@ -270,12 +282,6 @@
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.22",
       "packageUri": "lib/",
       "languageVersion": "3.4"
-    },
-    {
-      "name": "flutter_screenutil",
-      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/flutter_screenutil-5.9.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
     },
     {
       "name": "flutter_svg",
@@ -446,10 +452,22 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "nested",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "octo_image",
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/octo_image-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "paginate_firestore_plus",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/paginate_firestore_plus-1.0.1+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
     },
     {
       "name": "path",
@@ -522,6 +540,18 @@
       "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/pointycastle-3.9.1",
       "packageUri": "lib/",
       "languageVersion": "3.2"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/provider-6.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "responsive_framework",
+      "rootUri": "file:///Users/gh0zi0/.pub-cache/hosted/pub.dev/responsive_framework-1.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "rxdart",
@@ -674,7 +704,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2024-09-17T06:06:46.035476Z",
+  "generated": "2024-09-20T09:15:32.603913Z",
   "generator": "pub",
   "generatorVersion": "3.5.1",
   "flutterRoot": "file:///Users/gh0zi0/FlutterDev/flutter",

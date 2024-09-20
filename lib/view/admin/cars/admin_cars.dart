@@ -7,41 +7,10 @@ import 'package:gulfcoast/models/car_model.dart';
 import 'package:gulfcoast/view/admin/cars/car_widget.dart';
 import 'package:gulfcoast/view/admin/cars/add_car_dialog.dart';
 import 'package:gulfcoast/view/widgets/custom_loading.dart';
+import 'package:paginate_firestore_plus/paginate_firestore.dart';
 
-class AdminCars extends StatefulWidget {
+class AdminCars extends StatelessWidget {
   const AdminCars({super.key});
-
-  @override
-  State<AdminCars> createState() => _AdminCarsState();
-}
-
-class _AdminCarsState extends State<AdminCars> {
-  final ScrollController scrollViewController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    adminController.fetchCars();
-    scrollViewController.addListener(loadMoreData);
-  }
-
-  loadMoreData() {
-    if (adminController.hasMoreCars) {
-      double currentPosition = scrollViewController.position.pixels;
-      double maxExtent = scrollViewController.position.maxScrollExtent;
-      const double threshold = 0.25;
-      if (currentPosition >= maxExtent * threshold) {
-        adminController.fetchMoreCars();
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    scrollViewController.dispose();
-    scrollViewController.removeListener(() {});
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +20,7 @@ class _AdminCarsState extends State<AdminCars> {
         builder: (controller) {
           return RefreshIndicator(
             onRefresh: () async {
-              controller.fetchMoreCars();
+              controller.updateUI();
             },
             child: Column(
               children: [
@@ -65,30 +34,50 @@ class _AdminCarsState extends State<AdminCars> {
                   ),
                 ),
                 Expanded(
-                  child: (controller.searchCarController.text.isEmpty
-                          ? controller.cars == null
-                          : controller.searchCars == null)
-                      ? const CustomLoading()
-                      : (controller.searchCarController.text.isEmpty
-                              ? controller.cars!.isEmpty
-                              : controller.searchCars!.isEmpty)
-                          ? Center(child: Text('no_data_found'.tr))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              controller: scrollViewController,
-                              itemCount:
-                                  controller.searchCarController.text.isEmpty
-                                      ? controller.cars?.length
-                                      : controller.searchCars?.length,
-                              itemBuilder: (context, index) {
-                                CarModel car =
-                                    controller.searchCarController.text.isEmpty
-                                        ? controller.cars![index]
-                                        : controller.searchCars![index];
-                                return CarWidget(carData: car);
-                              },
-                            ),
+                    child: PaginateFirestore(
+                  onEmpty: SizedBox(
+                    height: Get.height * 0.75,
+                    child: Center(
+                        child: Text(
+                      'no_data_found'.tr,
+                    )),
+                  ),
+                  initialLoader: SizedBox(
+                      height: Get.height * 0.75, child: const CustomLoading()),
+                  itemBuilder: (context, documentSnapshots, index) {
+                    CarModel car = CarModel.fromJson(
+                        documentSnapshots[index].data() as Map);
+                    return CarWidget(carData: car);
+                  },
+                  query: firestore.collection('cars'),
+                  itemBuilderType: PaginateBuilderType.listView,
+                  isLive: true,
                 )
+
+                    //  (controller.searchCarController.text.isEmpty
+                    //         ? controller.cars == null
+                    //         : controller.searchCars == null)
+                    //     ? const CustomLoading()
+                    //     : (controller.searchCarController.text.isEmpty
+                    //             ? controller.cars!.isEmpty
+                    //             : controller.searchCars!.isEmpty)
+                    //         ? Center(child: Text('no_data_found'.tr))
+                    //         : ListView.builder(
+                    //             shrinkWrap: true,
+                    //             controller: scrollViewController,
+                    //             itemCount:
+                    //                 controller.searchCarController.text.isEmpty
+                    //                     ? controller.cars?.length
+                    //                     : controller.searchCars?.length,
+                    //             itemBuilder: (context, index) {
+                    //               CarModel car =
+                    //                   controller.searchCarController.text.isEmpty
+                    //                       ? controller.cars![index]
+                    //                       : controller.searchCars![index];
+                    //               return CarWidget(carData: car);
+                    //             },
+                    //           ),
+                    )
               ],
             ),
           );

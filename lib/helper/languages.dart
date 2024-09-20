@@ -84,6 +84,10 @@ class Languages extends Translations {
           'owner': 'Owner',
           'loading': 'Loading...',
           'select_user_for_this_car': 'Select user for this car',
+          'are_you_sure_you_want_to_assign': 'Are you sure you want to assign',
+          'to': 'To',
+          'yes': 'Yes',
+          'no': 'No',
         },
       };
 }

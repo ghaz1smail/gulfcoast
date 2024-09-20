@@ -14,15 +14,14 @@ import 'package:html/parser.dart' show parse;
 class AdminController extends GetxController {
   GetStorage getStorage = GetStorage();
   RxInt selectedIndex = 0.obs;
-  List<CarModel>? cars, searchCars;
-  List<UserModel>? users, searchUsers;
+  List<CarModel>? searchCars;
+  List<UserModel>? searchUsers;
   DocumentSnapshot? lastCar, lastUser;
   final int limit = 20;
-  bool hasMoreCars = true,
-      hasMoreUsers = true,
-      checking = true,
-      addingCar = false;
-  RxBool addingUser = false.obs, generatingUserData = false.obs;
+  bool checking = true, addingCar = false;
+  RxBool addingUser = false.obs,
+      generatingUserData = false.obs,
+      assigning = false.obs;
   String showError = '';
   RxString checkName = ''.obs;
   TextEditingController searchCarController = TextEditingController(),
@@ -33,6 +32,22 @@ class AdminController extends GetxController {
       userPassword = TextEditingController();
   final url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${appData.apiKey}';
+
+  assignUserToCar(CarModel car, UserModel user) async {
+    assigning.value = true;
+    update();
+
+    DocumentReference carDoc = firestore.collection('cars').doc(car.vin);
+    DocumentReference userDoc = firestore.collection('users').doc(user.uid);
+
+    await carDoc.update({'userId': userDoc});
+    await userDoc.update({
+      'cars': FieldValue.arrayUnion([carDoc])
+    });
+    assigning.value = false;
+    Get.back();
+    Get.back();
+  }
 
   changeNameText(String newName) {
     checkName.value = newName;
@@ -129,6 +144,7 @@ class AdminController extends GetxController {
         'username': userUsername.text,
         'email': '${userUsername.text.trim()}@gulfcoast.com',
         'type': 'user',
+        'uid': responseData['localId'],
         'name': userName.text,
         'tags': generateNameTag(userName.text),
         'password': pass,
@@ -192,90 +208,6 @@ class AdminController extends GetxController {
           .toList();
     } else {
       searchUsers = [];
-    }
-    update();
-  }
-
-  fetchUsers() async {
-    final querySnapshot = await firestore
-        .collection('users')
-        .where('type', isEqualTo: 'user')
-        .limit(limit)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      users = querySnapshot.docs
-          .map((doc) => UserModel.fromJson(doc.data()))
-          .toList();
-      lastUser = querySnapshot.docs.last;
-      hasMoreUsers = querySnapshot.docs.length == limit;
-    } else {
-      hasMoreUsers = false;
-      users = [];
-    }
-    update();
-  }
-
-  fetchMoreUsers() async {
-    if (!hasMoreUsers) return;
-
-    final querySnapshot = await firestore
-        .collection('users')
-        .where('type', isEqualTo: 'user')
-        .startAfterDocument(lastUser!)
-        .limit(limit)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      users = querySnapshot.docs
-          .map((doc) => UserModel.fromJson(doc.data()))
-          .toList();
-      lastUser = querySnapshot.docs.last;
-      hasMoreUsers = querySnapshot.docs.length == limit;
-    } else {
-      hasMoreUsers = false;
-    }
-    update();
-  }
-
-  fetchCars() async {
-    final querySnapshot = await firestore
-        .collection('cars')
-        .orderBy('timestamp')
-        .limit(limit)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      cars = querySnapshot.docs
-          .map((doc) => CarModel.fromJson(doc.data()))
-          .toList();
-      lastCar = querySnapshot.docs.last;
-      hasMoreCars = querySnapshot.docs.length == limit;
-    } else {
-      hasMoreCars = false;
-      cars = [];
-    }
-    update();
-  }
-
-  fetchMoreCars() async {
-    if (!hasMoreCars) return;
-
-    final querySnapshot = await firestore
-        .collection('cars')
-        .orderBy('timestamp')
-        .startAfterDocument(lastCar!)
-        .limit(limit)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      cars = querySnapshot.docs
-          .map((doc) => CarModel.fromJson(doc.data()))
-          .toList();
-      lastCar = querySnapshot.docs.last;
-      hasMoreCars = querySnapshot.docs.length == limit;
-    } else {
-      hasMoreCars = false;
     }
     update();
   }
@@ -349,9 +281,7 @@ class AdminController extends GetxController {
         'tags': generateCarTag(carData),
         ...carData.toJson()
       });
-      if (!cars!.map((m) => m.vin).contains(enteredVin)) {
-        cars!.add(carData);
-      }
+
       Get.back();
     }
     addingCar = false;

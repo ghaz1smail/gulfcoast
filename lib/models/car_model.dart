@@ -51,7 +51,7 @@ class CarModel {
       this.userId,
       this.images});
 
-  factory CarModel.fromJson(Map<String, dynamic> json) {
+  factory CarModel.fromJson(Map json) {
     return CarModel(
         vin: json['vin'] ?? '',
         year: json['year'] ?? '',
@@ -101,7 +101,7 @@ class CarModel {
       'transmission': transmission,
       'images': images,
       'status': status,
-      'userData': userData?.toJson() ?? {}
+      'userId': userId
     };
   }
 }

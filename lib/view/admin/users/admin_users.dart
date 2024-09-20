@@ -6,41 +6,10 @@ import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/models/user_model.dart';
 import 'package:gulfcoast/view/admin/users/user_details_screen.dart';
 import 'package:gulfcoast/view/widgets/custom_loading.dart';
+import 'package:paginate_firestore_plus/paginate_firestore.dart';
 
-class AdminUsers extends StatefulWidget {
+class AdminUsers extends StatelessWidget {
   const AdminUsers({super.key});
-
-  @override
-  State<AdminUsers> createState() => _AdminUsersState();
-}
-
-class _AdminUsersState extends State<AdminUsers> {
-  late final ScrollController scrollViewController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    adminController.fetchUsers();
-    scrollViewController.addListener(loadMoreData);
-  }
-
-  loadMoreData() {
-    if (adminController.hasMoreUsers) {
-      double currentPosition = scrollViewController.position.pixels;
-      double maxExtent = scrollViewController.position.maxScrollExtent;
-      const double threshold = 0.25;
-      if (currentPosition >= maxExtent * threshold) {
-        adminController.fetchMoreUsers();
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    scrollViewController.dispose();
-    scrollViewController.removeListener(() {});
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +19,7 @@ class _AdminUsersState extends State<AdminUsers> {
         builder: (controller) {
           return RefreshIndicator(
             onRefresh: () async {
-              controller.fetchMoreUsers();
+              controller.updateUI();
             },
             child: Column(
               children: [
@@ -64,38 +33,59 @@ class _AdminUsersState extends State<AdminUsers> {
                   ),
                 ),
                 Expanded(
-                  child: (controller.searchUserController.text.isEmpty
-                          ? controller.users == null
-                          : controller.searchUsers == null)
-                      ? const CustomLoading()
-                      : (controller.searchUserController.text.isEmpty
-                              ? controller.users!.isEmpty
-                              : controller.searchUsers!.isEmpty)
-                          ? Center(child: Text('no_data_found'.tr))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              controller: scrollViewController,
-                              itemCount:
-                                  controller.searchCarController.text.isEmpty
-                                      ? controller.users?.length
-                                      : controller.searchUsers?.length,
-                              itemBuilder: (context, index) {
-                                UserModel user =
-                                    controller.searchUserController.text.isEmpty
-                                        ? controller.users![index]
-                                        : controller.searchUsers![index];
-                                return Card(
-                                  child: ListTile(
-                                    onTap: () {
-                                      Get.to(() =>
-                                          UserDetailsScreen(userData: user));
-                                    },
-                                    title: Text(user.name),
-                                  ),
-                                );
-                              },
-                            ),
-                ),
+                    child: PaginateFirestore(
+                  onEmpty: SizedBox(
+                    height: Get.height * 0.75,
+                    child: Center(
+                        child: Text(
+                      'no_data_found'.tr,
+                    )),
+                  ),
+                  initialLoader: SizedBox(
+                      height: Get.height * 0.75, child: const CustomLoading()),
+                  itemBuilder: (context, documentSnapshots, index) {
+                    UserModel user = UserModel.fromJson(
+                        documentSnapshots[index].data() as Map);
+                    return Card(
+                      child: ListTile(
+                        onTap: () async {
+                          await Get.to(() => UserDetailsScreen(userData: user));
+                          controller.updateUI();
+                        },
+                        title: Text(user.name),
+                      ),
+                    );
+                  },
+                  query: firestore
+                      .collection('users')
+                      .where('type', isEqualTo: 'user'),
+                  itemBuilderType: PaginateBuilderType.listView,
+                  isLive: true,
+                )
+                    //  (controller.searchCarController.text.isEmpty
+                    //         ? controller.cars == null
+                    //         : controller.searchCars == null)
+                    //     ? const CustomLoading()
+                    //     : (controller.searchCarController.text.isEmpty
+                    //             ? controller.cars!.isEmpty
+                    //             : controller.searchCars!.isEmpty)
+                    //         ? Center(child: Text('no_data_found'.tr))
+                    //         : ListView.builder(
+                    //             shrinkWrap: true,
+                    //             controller: scrollViewController,
+                    //             itemCount:
+                    //                 controller.searchCarController.text.isEmpty
+                    //                     ? controller.cars?.length
+                    //                     : controller.searchCars?.length,
+                    //             itemBuilder: (context, index) {
+                    //               CarModel car =
+                    //                   controller.searchCarController.text.isEmpty
+                    //                       ? controller.cars![index]
+                    //                       : controller.searchCars![index];
+                    //               return CarWidget(carData: car);
+                    //             },
+                    //           ),
+                    )
               ],
             ),
           );

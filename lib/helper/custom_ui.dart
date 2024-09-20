@@ -3,6 +3,47 @@ import 'package:get/get.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 
 class CustomUi {
+  simpleBottomSheet(Widget widget) async {
+    await Get.bottomSheet(
+      Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(10),
+          ),
+        ),
+        padding: EdgeInsets.only(bottom: Get.mediaQuery.viewInsets.bottom),
+        child: ListView(shrinkWrap: true, children: [SafeArea(child: widget)]),
+      ),
+      isScrollControlled: true,
+    );
+  }
+
+  dragAbleBottomSheet(
+      Widget widget, ScrollController customScrollController) async {
+    await Get.bottomSheet(
+      DraggableScrollableSheet(
+        expand: false,
+        maxChildSize: 0.85,
+        initialChildSize: 0.85,
+        builder: (context, scrollController) {
+          customScrollController = scrollController;
+          return Container(
+              padding:
+                  EdgeInsets.only(bottom: Get.mediaQuery.viewInsets.bottom),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(10),
+                ),
+              ),
+              child: widget);
+        },
+      ),
+      isScrollControlled: true,
+    );
+  }
+
   showToastMessage(String title) {
     Get.showSnackbar(GetSnackBar(
       message: title.tr,
@@ -42,7 +83,11 @@ class CustomUi {
     );
   }
 
-  customDialog(Widget content) {
-    Get.dialog(Dialog(child: content));
+  customDialog(Widget content, {dissmiss = true}) {
+    Get.dialog(
+        Dialog(
+          child: content,
+        ),
+        barrierDismissible: dissmiss);
   }
 }

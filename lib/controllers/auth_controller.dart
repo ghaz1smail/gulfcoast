@@ -36,15 +36,14 @@ class AuthController extends GetxController {
     update();
   }
 
-  Future<UserModel?> getUserData(uid) async {
+  Future<UserModel?> getUserData(String uid) async {
+    UserModel? gettingUser;
     await firestore.collection('users').doc(uid).get().then((value) {
       if (value.exists) {
-        return UserModel.fromJson(value.data() as Map);
-      } else {
-        return null;
+        gettingUser = UserModel.fromJson(value.data() as Map);
       }
     });
-    return null;
+    return gettingUser;
   }
 
   forgetingPassAuth() async {
@@ -254,7 +253,7 @@ class AuthController extends GetxController {
     }
   }
 
-  setLoading(x) {
+  setLoading(bool x) {
     loading = x;
     update();
   }

@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/models/car_model.dart';
+import 'package:gulfcoast/models/user_model.dart';
 import 'package:gulfcoast/view/admin/cars/car_details_screen.dart';
+import 'package:gulfcoast/view/admin/users/select_car_dialog.dart';
 import 'package:gulfcoast/view/widgets/cached_network_image.dart';
 
 class CarWidget extends StatelessWidget {
   final CarModel carData;
-  const CarWidget({super.key, required this.carData});
+  final UserModel? selectedUser;
+  const CarWidget({super.key, required this.carData, this.selectedUser});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => CarDetailsScreen(carData: carData));
+        if (selectedUser != null) {
+          customUi.customDialog(
+              SelectCarDialog(
+                carData: carData,
+                userData: selectedUser!,
+              ),
+              dissmiss: false);
+        } else {
+          Get.to(() => CarDetailsScreen(carData: carData));
+        }
       },
       child: Card(
         child: Padding(
@@ -29,8 +40,8 @@ class CarWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       child: CustomImageNetwork(
                           url: carData.images?.first,
-                          width: 125.w,
-                          height: 100.w,
+                          width: Get.width * 0.25,
+                          height: Get.height * 0.1,
                           boxFit: BoxFit.fill),
                     ),
                   const SizedBox(
