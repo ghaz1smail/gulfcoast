@@ -11,7 +11,7 @@ class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController(),
       passwordController = TextEditingController();
   UserModel? userData;
-  bool loading = false, admin = false, signIn = true, checking = true;
+  bool loading = false, admin = false, checking = true;
   AppModel appData = AppModel();
 
   @override
@@ -45,11 +45,6 @@ class AuthController extends GetxController {
       }
     });
     return null;
-  }
-
-  changeMode() {
-    signIn = !signIn;
-    update();
   }
 
   forgetingPassAuth() async {
@@ -162,45 +157,6 @@ class AuthController extends GetxController {
       }
     }
     clearData();
-  }
-
-  Future<String> checkUserName(String username) async {
-    String theUsername = '';
-
-    while (theUsername.isEmpty) {
-      await firestore
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .get()
-          .then((users) {
-        if (users.docs.isEmpty) {
-          theUsername = username;
-        } else {
-          // username =
-          //     (fNameController.text.trim() + users.docs.length.toString());
-        }
-      });
-    }
-    return theUsername;
-  }
-
-  createUser() async {
-    getStorage.write('uid', firebaseAuth.currentUser!.uid);
-    userData = UserModel(
-      username: '',
-      uid: firebaseAuth.currentUser!.uid,
-      timestamp: DateTime.now().toIso8601String(),
-      email: '',
-      firstName: '',
-      userUsingCode: [],
-      type: 'user',
-    )
-      ..password = customFormats.encryptText(passwordController.text, "pass")
-      ..tags = customFormats.generateTagsCustom('');
-    await firestore
-        .collection('users')
-        .doc(firebaseAuth.currentUser!.uid)
-        .set(userData!.toJson());
   }
 
   signingInAuth() async {

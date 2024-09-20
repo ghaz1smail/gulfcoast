@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gulfcoast/admin/admin_cars.dart';
-import 'package:gulfcoast/admin/admin_dashboard.dart';
-import 'package:gulfcoast/admin/admin_profile.dart';
-import 'package:gulfcoast/admin/admin_users.dart';
+import 'package:gulfcoast/view/admin/cars/admin_cars.dart';
+import 'package:gulfcoast/view/admin/admin_dashboard.dart';
+import 'package:gulfcoast/view/admin/admin_profile.dart';
+import 'package:gulfcoast/view/admin/users/admin_users.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 
 class AdminScreen extends StatelessWidget {
@@ -24,7 +24,7 @@ class AdminScreen extends StatelessWidget {
                   indicatorColor: appTheme.primaryColor,
                   tabs: [
                     Tab(text: 'dashboard'.tr),
-                    Tab(text: 'cars'.tr),
+                    Tab(text: 'vehicles'.tr),
                     Tab(text: 'users'.tr),
                     Tab(text: 'profile'.tr),
                   ]),

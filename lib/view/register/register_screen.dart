@@ -52,6 +52,8 @@ class RegisterScreen extends StatelessWidget {
                                       controller: controller.emailController,
                                       autofill: const [AutofillHints.email],
                                       onSubmit: (w) {
+                                        FocusScope.of(context).unfocus();
+
                                         controller.signingInAuth();
                                       },
                                     ),
@@ -65,6 +67,8 @@ class RegisterScreen extends StatelessWidget {
                                       controller: controller.passwordController,
                                       autofill: const [AutofillHints.password],
                                       onSubmit: (w) {
+                                        FocusScope.of(context).unfocus();
+
                                         controller.signingInAuth();
                                       },
                                     ),
@@ -76,6 +80,8 @@ class RegisterScreen extends StatelessWidget {
                                       loading: controller.loading,
                                       title: 'log_in',
                                       function: () async {
+                                        FocusScope.of(context).unfocus();
+
                                         controller.signingInAuth();
                                       },
                                       color: appTheme.primaryColor,
@@ -141,6 +147,8 @@ class RegisterScreen extends StatelessWidget {
                                       controller: controller.emailController,
                                       autofill: const [AutofillHints.email],
                                       onSubmit: (w) {
+                                        FocusScope.of(context).unfocus();
+
                                         controller.signingInAuth();
                                       },
                                     ),
@@ -165,6 +173,7 @@ class RegisterScreen extends StatelessWidget {
                                       loading: controller.loading,
                                       title: 'log_in',
                                       function: () async {
+                                        FocusScope.of(context).unfocus();
                                         controller.signingInAuth();
                                       },
                                       color: appTheme.primaryColor,

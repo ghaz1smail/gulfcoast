@@ -6,6 +6,9 @@ class CustomUi {
   showToastMessage(String title) {
     Get.showSnackbar(GetSnackBar(
       message: title.tr,
+      margin: const EdgeInsets.all(20),
+      duration: const Duration(seconds: 3),
+      borderRadius: 20,
     ));
   }
 

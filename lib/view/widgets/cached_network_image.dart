@@ -35,28 +35,27 @@ class CustomImageNetwork extends StatelessWidget {
     cacheWidth = targetSize.width.cacheSize(context);
 
     return CachedNetworkImage(
-      maxWidthDiskCache: cacheWidth,
-      maxHeightDiskCache: cacheHeight,
-      imageUrl: url,
-      width: width,
-      height: height,
-      imageBuilder: (context, imageProvider) {
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(image: imageProvider, fit: boxFit),
-          ),
-        );
-      },
-      placeholder: (context, url) => Image.asset(
-        '',
-        height: height,
+        maxWidthDiskCache: cacheWidth,
+        maxHeightDiskCache: cacheHeight,
+        imageUrl: url,
         width: width,
-      ),
-      errorWidget: (context, url, error) => Image.asset(
-        '',
         height: height,
-        width: width,
-      ),
-    );
+        fit: boxFit,
+        placeholder: (context, url) => Container(
+              decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(10)),
+              height: height,
+              width: width,
+              child: const Icon(Icons.photo),
+            ),
+        errorWidget: (context, url, error) => Container(
+              decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(10)),
+              height: height,
+              width: width,
+              child: const Icon(Icons.photo),
+            ));
   }
 }
