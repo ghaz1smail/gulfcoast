@@ -8,96 +8,57 @@ class DrawerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.black,
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Get.back();
-              userController.changeSelectedIndex('/profile');
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.person,
-                  size: 35,
-                  color: appTheme.primaryColor,
+      child: SafeArea(
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: CircleAvatar(
+                  radius: 40,
+                  child: Icon(
+                    Icons.person,
+                    size: 35,
+                  ),
                 ),
               ),
             ),
-          ),
-          Text(
-            authController.userData!.name,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Divider(
-            thickness: 1,
-            height: 0,
-            color: Colors.white,
-          ),
-          ListTile(
-            onTap: () {
-              Get.back();
-              userController.changeSelectedIndex('/mining-devices');
-            },
-            title: Text(
-              'mining_devices'.tr,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
+            Text(
+              authController.userData!.name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-          ),
-          ListTile(
-            onTap: () {
-              Get.back();
-              userController.changeSelectedIndex('/wallet');
-            },
-            title: Text(
-              'wallet'.tr,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
+            const SizedBox(
+              height: 20,
             ),
-          ),
-          ListTile(
-            onTap: () {
-              Get.back();
-              userController.changeSelectedIndex('/mine');
-            },
-            title: Text(
-              'mine'.tr,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
+            const Divider(
+              thickness: 1,
+              height: 0,
             ),
-          ),
-          ListTile(
-            onTap: () {
-              Get.back();
-              userController.changeSelectedIndex('/contact-us');
-            },
-            title: Text(
-              'contact_us'.tr,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
+            ListTile(
+              onTap: () {
+                Get.back();
+              },
+              title: Text(
+                'contact_us'.tr,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: () {
-              Get.back();
-              authController.logOut();
-            },
-            title: Text(
-              'log_out'.tr,
-              style: const TextStyle(
-                  color: Colors.red, fontWeight: FontWeight.bold),
+            ListTile(
+              onTap: () {
+                Get.back();
+                authController.logOut();
+              },
+              title: Text(
+                'log_out'.tr,
+                style: const TextStyle(
+                    color: Colors.red, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -4,7 +4,7 @@ class Languages extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
         'en': {
-          'app_name': 'Infinity Miner',
+          'app_name': 'Gulf Coast',
           'email': 'Email',
           'name': 'Name',
           'back': 'Back',
@@ -88,6 +88,14 @@ class Languages extends Translations {
           'to': 'To',
           'yes': 'Yes',
           'no': 'No',
+          'aed': 'AED',
+          'for_sale': 'For sale',
+          'continue_as_guest': 'Continue as guest',
+          'auction': 'Auction',
+          'filter': 'Filter',
+          'car_for_sale': 'Car for sale',
+          'select': 'Select',
+          'select_year': 'Select year',
         },
       };
 }

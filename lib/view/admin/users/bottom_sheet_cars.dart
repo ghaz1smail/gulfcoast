@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/models/car_model.dart';
 import 'package:gulfcoast/models/user_model.dart';
-import 'package:gulfcoast/view/admin/cars/car_widget.dart';
+import 'package:gulfcoast/view/widgets/car_widget.dart';
 import 'package:gulfcoast/view/widgets/custom_loading.dart';
 import 'package:paginate_firestore_plus/paginate_firestore.dart';
 

@@ -69,40 +69,56 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  carData!.userId == null
-                      ? ListTile(
-                          onTap: () async {
-                            ScrollController customScrollController =
-                                ScrollController();
-                            await customUi.dragAbleBottomSheet(
-                                BottomSheetUsers(
-                                  carData: carData!,
-                                  customScrollController:
-                                      customScrollController,
-                                ),
-                                customScrollController);
-                            await getCarData();
-                          },
-                          contentPadding: EdgeInsets.zero,
-                          leading:
-                              Icon(Icons.person, color: appTheme.primaryColor),
-                          title: Text('select_user_for_this_car'.tr),
-                        )
-                      : FutureBuilder(
-                          future: carData!.userId!.get(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              UserModel user = UserModel.fromJson(
-                                  snapshot.data!.data() as Map);
+                  if (authController.admin)
+                    carData!.userId == null
+                        ? ListTile(
+                            onTap: () async {
+                              ScrollController customScrollController =
+                                  ScrollController();
+                              await customUi.dragAbleBottomSheet(
+                                  BottomSheetUsers(
+                                    carData: carData!,
+                                    customScrollController:
+                                        customScrollController,
+                                  ),
+                                  customScrollController);
+                              await getCarData();
+                            },
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(Icons.person,
+                                color: appTheme.primaryColor),
+                            title: Text('select_user_for_this_car'.tr),
+                          )
+                        : FutureBuilder(
+                            future: carData!.userId!.get(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                UserModel user = UserModel.fromJson(
+                                    snapshot.data!.data() as Map);
+                                return ListTile(
+                                  onTap: () {
+                                    Get.to(() =>
+                                        UserDetailsScreen(userData: user));
+                                  },
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: Icon(Icons.person,
+                                      color: appTheme.primaryColor),
+                                  title: Text(user.name),
+                                  trailing: Text(
+                                    'owner'.tr,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: appTheme.primaryColor),
+                                  ),
+                                );
+                              }
+
                               return ListTile(
-                                onTap: () {
-                                  Get.to(
-                                      () => UserDetailsScreen(userData: user));
-                                },
                                 contentPadding: EdgeInsets.zero,
                                 leading: Icon(Icons.person,
                                     color: appTheme.primaryColor),
-                                title: Text(user.name),
+                                title: Text('loading'.tr),
                                 trailing: Text(
                                   'owner'.tr,
                                   style: TextStyle(
@@ -111,42 +127,39 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                                       color: appTheme.primaryColor),
                                 ),
                               );
-                            }
-
-                            return ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: Icon(Icons.person,
-                                  color: appTheme.primaryColor),
-                              title: Text('loading'.tr),
-                              trailing: Text(
-                                'owner'.tr,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: appTheme.primaryColor),
-                              ),
-                            );
-                          },
-                        ),
-                  const Divider(
-                    thickness: 2,
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 5,
-                        children: [
-                          Icon(adminController
-                              .iconsSwitch(widget.carData.status)),
-                          Text(
-                            carData!.status.tr,
-                            style: const TextStyle(fontSize: 20),
+                            },
                           ),
-                        ],
-                      ),
+                  if (authController.admin)
+                    const Divider(
+                      thickness: 2,
                     ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5,
+                            children: [
+                              Icon(adminController
+                                  .iconsSwitch(widget.carData.status)),
+                              Text(
+                                carData!.status.tr,
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (carData!.price.isNotEmpty)
+                        Text(
+                          '${'aed'.tr} ${carData!.price}',
+                          style: const TextStyle(
+                              color: Colors.green, fontWeight: FontWeight.bold),
+                        )
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),

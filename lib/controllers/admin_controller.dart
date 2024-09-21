@@ -283,9 +283,23 @@ class AdminController extends GetxController {
       });
 
       Get.back();
+      updateCarFilter(carData);
     }
     addingCar = false;
     update();
+  }
+
+  updateCarFilter(CarModel carData) {
+    DocumentReference ref = firestore.collection('cars').doc(carData.vin);
+    firestore.collection('makers').doc(carData.make).set({
+      'cars': FieldValue.arrayUnion([ref]),
+      'title': carData.make
+    }, SetOptions(merge: true));
+
+    firestore.collection('models').doc(carData.model).set({
+      'cars': FieldValue.arrayUnion([ref]),
+      'title': carData.model
+    }, SetOptions(merge: true));
   }
 
   Future<CarModel?> getCarData(String vin) async {
@@ -309,9 +323,9 @@ class AdminController extends GetxController {
               'GET', Uri.parse('https://en.carcheck.by/auto/$vin'));
 
           http.StreamedResponse responseImages = await requestImages.send();
-
+          String htmlContent = await responseImages.stream.bytesToString();
+          Get.log('$htmlContent: ${responseImages.statusCode}');
           if (responseImages.statusCode == 200) {
-            String htmlContent = await responseImages.stream.bytesToString();
             checkCar.images = getCarImages(htmlContent);
           }
         } catch (e) {

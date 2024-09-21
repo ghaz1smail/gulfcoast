@@ -12,9 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     bool isMobile = Get.width < 500;
     return AppBar(
       title: TextButton(
-        onPressed: () {
-          userController.changeSelectedIndex('/home');
-        },
+        onPressed: () {},
         child: Text(
           'app_name'.tr,
           style: TextStyle(
@@ -32,15 +30,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     },
                     icon: const Icon(
                       Icons.menu,
-                      color: Colors.white,
+                      color: Colors.black,
                     )),
               )
             ]
           : [
               TextButton(
-                onPressed: () {
-                  userController.changeSelectedIndex('/mining-devices');
-                },
+                onPressed: () {},
                 child: Text(
                   'mining_devices'.tr,
                   style: const TextStyle(
@@ -48,9 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  userController.changeSelectedIndex('/wallet');
-                },
+                onPressed: () {},
                 child: Text(
                   'wallet'.tr,
                   style: const TextStyle(
@@ -58,9 +52,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  userController.changeSelectedIndex('/mine');
-                },
+                onPressed: () {},
                 child: Text(
                   'mine'.tr,
                   style: const TextStyle(
@@ -68,9 +60,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  userController.changeSelectedIndex('/contact-us');
-                },
+                onPressed: () {},
                 child: Text(
                   'contact_us'.tr,
                   style: const TextStyle(
@@ -80,9 +70,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: GestureDetector(
-                  onTap: () {
-                    userController.changeSelectedIndex('/profile');
-                  },
+                  onTap: () {},
                   child: CircleAvatar(
                     radius: 15,
                     backgroundColor: Colors.white,

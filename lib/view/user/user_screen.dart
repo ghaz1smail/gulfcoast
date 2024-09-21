@@ -1,40 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gulfcoast/controllers/user_controller.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
-import 'package:gulfcoast/view/user/contact_us/contact_us_screen.dart';
-import 'package:gulfcoast/view/user/custom_app_bar.dart';
-import 'package:gulfcoast/view/user/drawer_menu.dart';
-import 'package:gulfcoast/view/user/home/home_screen.dart';
+import 'package:gulfcoast/view/user/cars/auction_cars.dart';
+import 'package:gulfcoast/view/user/cars/user_cars.dart';
 import 'package:gulfcoast/view/user/profile/profile_screen.dart';
-import 'package:gulfcoast/view/widgets/custom_loading.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    bool isMobile = Get.width < 500;
-    return Scaffold(
-        appBar: const CustomAppBar(),
-        endDrawer: isMobile ? const DrawerMenu() : null,
-        body: GetBuilder(
-          initState: (state) {
-            userController.checkUserRoute(updateData: false);
-          },
-          init: UserController(),
-          builder: (controller) {
-            return controller.checking
-                ? const CustomLoading()
-                : IndexedStack(
-                    index: controller.selectedIndex.value,
-                    children: const [
-                      HomeScreen(),
-                      ContactUsScreen(),
-                      ProfileScreen()
-                    ],
-                  );
-          },
-        ));
+    return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'app_name'.tr,
+                style: const TextStyle(color: Colors.black),
+              ),
+              bottom: TabBar(
+                  labelStyle: TextStyle(color: appTheme.primaryColor),
+                  indicatorColor: appTheme.primaryColor,
+                  tabs: [
+                    Tab(text: 'vehicles'.tr),
+                    Tab(text: 'auction'.tr),
+                    Tab(text: 'profile'.tr),
+                  ]),
+            ),
+            body: const TabBarView(children: [
+              UserCars(),
+              AuctionCars(
+                guest: false,
+              ),
+              UserProfile()
+            ])));
   }
 }

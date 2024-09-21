@@ -22,6 +22,7 @@ class CarModel {
   final String driveType;
   final String transmission;
   final String status;
+  final String price;
   final UserModel? userData;
   List? images;
   final DocumentReference? userId;
@@ -47,6 +48,7 @@ class CarModel {
       this.driveType = '',
       this.transmission = '',
       this.status = '',
+      this.price = '',
       this.userData,
       this.userId,
       this.images});
@@ -75,6 +77,7 @@ class CarModel {
         status: json['status'] ?? 'new',
         images: json['images'] ?? [],
         userId: json['userId'],
+        price: json['price'] ?? '',
         userData: UserModel.fromJson(json['userData'] ?? {}));
   }
 
@@ -101,7 +104,8 @@ class CarModel {
       'transmission': transmission,
       'images': images,
       'status': status,
-      'userId': userId
+      'userId': userId,
+      'price': price,
     };
   }
 }

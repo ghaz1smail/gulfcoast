@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/view/admin/cars/admin_cars.dart';
-import 'package:gulfcoast/view/admin/admin_dashboard.dart';
-import 'package:gulfcoast/view/admin/admin_profile.dart';
+import 'package:gulfcoast/view/admin/dashboard/admin_dashboard.dart';
+import 'package:gulfcoast/view/admin/profile/admin_profile.dart';
 import 'package:gulfcoast/view/admin/users/admin_users.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 
