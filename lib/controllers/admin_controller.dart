@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +12,13 @@ import 'package:gulfcoast/models/user_model.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 
 class AdminController extends GetxController {
   GetStorage getStorage = GetStorage();
   RxInt selectedIndex = 0.obs;
-  List<CarModel>? searchCars;
+  List<ResponseCarModel>? searchCars;
   List<UserModel>? searchUsers;
   DocumentSnapshot? lastCar, lastUser;
   final int limit = 20;
@@ -32,6 +36,8 @@ class AdminController extends GetxController {
       userPassword = TextEditingController();
   final url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${appData.apiKey}';
+
+  Map<String, String> headers = {};
 
   assignUserToCar(CarModel car, UserModel user) async {
     assigning.value = true;
@@ -188,7 +194,7 @@ class AdminController extends GetxController {
 
     if (querySnapshot.docs.isNotEmpty) {
       searchCars = querySnapshot.docs
-          .map((doc) => CarModel.fromJson(doc.data()))
+          .map((doc) => ResponseCarModel.fromJson(doc.data()))
           .toList();
     } else {
       searchCars = [];
@@ -262,7 +268,21 @@ class AdminController extends GetxController {
     return tags;
   }
 
+  updateCarFilter(CarModel carData) {
+    DocumentReference ref = firestore.collection('cars').doc(carData.vin);
+    firestore.collection('makers').doc(carData.make.toLowerCase()).set({
+      'cars': FieldValue.arrayUnion([ref]),
+      'title': carData.make.toLowerCase()
+    }, SetOptions(merge: true));
+
+    firestore.collection('models').doc(carData.model.toLowerCase()).set({
+      'cars': FieldValue.arrayUnion([ref]),
+      'title': carData.model.toLowerCase()
+    }, SetOptions(merge: true));
+  }
+
   addCar(String enteredVin) async {
+    enteredVin = enteredVin.toUpperCase();
     if (adminController.vin.text.length < 17) {
       showError = 'vin_should_at_least_17_characters';
       update();
@@ -275,13 +295,11 @@ class AdminController extends GetxController {
       showError = 'no_data_found';
     } else {
       showError = '';
-      Get.log(carData.toJson().toString());
       await firestore.collection('cars').doc(enteredVin).set({
         'timestamp': DateTime.now().toIso8601String(),
         'tags': generateCarTag(carData),
         ...carData.toJson()
-      });
-
+      }, SetOptions(merge: true));
       Get.back();
       updateCarFilter(carData);
     }
@@ -289,58 +307,123 @@ class AdminController extends GetxController {
     update();
   }
 
-  updateCarFilter(CarModel carData) {
-    DocumentReference ref = firestore.collection('cars').doc(carData.vin);
-    firestore.collection('makers').doc(carData.make).set({
-      'cars': FieldValue.arrayUnion([ref]),
-      'title': carData.make
-    }, SetOptions(merge: true));
-
-    firestore.collection('models').doc(carData.model).set({
-      'cars': FieldValue.arrayUnion([ref]),
-      'title': carData.model
-    }, SetOptions(merge: true));
-  }
-
   Future<CarModel?> getCarData(String vin) async {
-    CarModel? checkCar;
+    ResponseCarModel? checkCar;
     try {
       var headers = {
-        'x-rapidapi-host': 'vin-decoder7.p.rapidapi.com',
+        'x-rapidapi-host': 'car-utils.p.rapidapi.com',
         'x-rapidapi-key': 'cddfad3d30msh687ccf59d2e11a3p16c8e5jsnc4b8c97f25e2'
       };
-      var requestData = http.Request(
-          'GET', Uri.parse('https://vin-decoder7.p.rapidapi.com/vin?vin=$vin'));
+      var requestData = http.Request('GET',
+          Uri.parse('https://car-utils.p.rapidapi.com/vindecoder?vin=$vin'));
 
       requestData.headers.addAll(headers);
 
       http.StreamedResponse responseData = await requestData.send();
       String data = await responseData.stream.bytesToString();
-      if (responseData.statusCode == 200) {
-        checkCar = CarModel.fromJson(jsonDecode(data)['specifications']);
-        try {
-          var requestImages = http.Request(
-              'GET', Uri.parse('https://en.carcheck.by/auto/$vin'));
 
-          http.StreamedResponse responseImages = await requestImages.send();
-          String htmlContent = await responseImages.stream.bytesToString();
-          Get.log('$htmlContent: ${responseImages.statusCode}');
-          if (responseImages.statusCode == 200) {
-            checkCar.images = getCarImages(htmlContent);
-          }
+      if (responseData.statusCode == 200) {
+        checkCar = ResponseCarModel.fromJson(jsonDecode(data));
+      } else {
+        return null;
+      }
+      if (checkCar.errors!.length <= 1) {
+        checkCar.specs!.vin = vin;
+        late WebViewControllerPlus controller;
+        try {
+          controller = WebViewControllerPlus()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..setBackgroundColor(const Color(0x00000000))
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onProgress: (progress) {
+                  Get.log(progress.toString());
+                  try {
+                    Future future = controller.runJavaScriptReturningResult(
+                        "document.documentElement.outerHTML;");
+                    future.then((data) {
+                      String html = Platform.isIOS
+                          ? data.toString()
+                          : jsonDecode(data).toString();
+                      Get.log(html);
+                      if (html.contains('Remove vehicle')) {
+                        Get.log('html');
+                        firestore.collection('cars').doc(vin).set({
+                          'images': getCarImages(html),
+                          'lot': getCarLot(html),
+                          'provider': extractProvider(html)
+                        }, SetOptions(merge: true));
+                      }
+                    });
+                  } catch (e) {
+                    //
+                  }
+                },
+              ),
+            )
+            ..loadRequest(Uri.parse('https://en.carcheck.by/auto/$vin'));
+          // controller = WebViewController()
+          //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          //   ..setNavigationDelegate(
+          //     NavigationDelegate(
+          //       onProgress: (progress) {
+          //         Get.log(progress.toString());
+
+          //         try {
+          //           Future future = controller.runJavaScriptReturningResult(
+          //               "document.documentElement.outerHTML;");
+          //           future.then((data) {
+          //             String html = Platform.isIOS
+          //                 ? data.toString()
+          //                 : jsonDecode(data).toString();
+          //             if (html.contains('Remove vehicle')) {
+          //               Get.log('html');
+          //               firestore.collection('cars').doc(vin).set({
+          //                 'images': getCarImages(html),
+          //                 'lot': getCarLot(html),
+          //                 'provider': extractProvider(html)
+          //               }, SetOptions(merge: true));
+          //               controller.clearCache();
+          //             }
+          //           });
+          //         } catch (e) {
+          //           //
+          //         }
+          //       },
+          //     ),
+          //   )
+          //   ..loadRequest(Uri.parse('https://en.carcheck.by/auto/$vin'));
         } catch (e) {
           //
         }
+
+        return checkCar.specs;
       } else {
-// {"error":"Invalid Vin"}
         return null;
       }
-      return checkCar;
     } catch (e) {
+      Get.log('Error: $e');
       customUi.showToastMessage(
           'something_went_wrong_try_again_later_or_try_another_vin');
     }
     return null;
+  }
+
+  String extractProvider(String htmlContent) {
+    final document = parse(htmlContent);
+    final iaaiDiv = document.querySelector('div.hleb');
+    if (iaaiDiv != null) {
+      final iaaiText = iaaiDiv.text;
+      final parts = iaaiText.split('›');
+      return parts.isNotEmpty ? parts[0].trim() : '';
+    }
+    return '';
+  }
+
+  String getCarLot(String htmlContent) {
+    final document = parse(htmlContent);
+    final lotSpan = document.querySelector('div.block:nth-child(7) span');
+    return lotSpan?.text ?? '';
   }
 
   List<String> getCarImages(String htmlContent) {
@@ -349,6 +432,7 @@ class AdminController extends GetxController {
 
     if (carouselDiv != null) {
       final imgElements = carouselDiv.getElementsByTagName('img');
+
       return imgElements
           .map((img) => img.attributes['src'] ?? '')
           .where((w) => !w.contains('noimage'))

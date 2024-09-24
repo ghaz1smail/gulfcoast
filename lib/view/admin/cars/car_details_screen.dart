@@ -174,10 +174,11 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: CustomChip(
-                        title: '${'year'.tr}: ${carData!.year}',
-                        textToCopy: carData!.year),
+                        title: '${'year'.tr}: ${carData!.modelYear}',
+                        textToCopy: carData!.modelYear),
                   ),
-                  CustomChip(title: '${'fuel_type'.tr}: ${carData!.fuelType}'),
+                  CustomChip(
+                      title: '${'fuel_type'.tr}: ${carData!.fuelTypePrimary}'),
                   Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: CustomChip(

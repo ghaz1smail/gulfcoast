@@ -28,7 +28,7 @@ class SelectCarDialog extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                '${carData.make} ${carData.model} ${carData.year}',
+                '${carData.make} ${carData.model} ${carData.modelYear}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),

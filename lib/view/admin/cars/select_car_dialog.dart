@@ -41,7 +41,7 @@ class SelectUserDialog extends StatelessWidget {
                 ),
               ),
               Text(
-                '${carData.make} ${carData.model} ${carData.year}',
+                '${carData.make} ${carData.model} ${carData.modelYear}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),

@@ -138,7 +138,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                             CarDetailsScreen(carData: car));
                                       },
                                       title: Text(
-                                          '${car.make} ${car.model} ${car.year}'),
+                                          '${car.make} ${car.model} ${car.modelYear}'),
                                       trailing:
                                           Chip(label: Text(car.status.tr)),
                                     ));

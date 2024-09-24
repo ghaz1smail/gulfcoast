@@ -81,7 +81,7 @@ class CarWidget extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        '${carData.make} ${carData.model} ${carData.year}',
+                        '${carData.make} ${carData.model} ${carData.modelYear}',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontSize: 18),

@@ -26,6 +26,7 @@ class AuthController extends GetxController {
     if (userData != null) {
       if (goHome) {
         if (userData!.type == 'admin') {
+          admin = true;
           await Get.offAllNamed('/admin');
         } else {
           await Get.offAllNamed('/home');
