@@ -1,5 +1,5 @@
 PODS:
-  - cloud_firestore (5.4.1):
+  - cloud_firestore (5.4.2):
     - Firebase/Firestore (= 11.0.0)
     - firebase_core
     - Flutter
@@ -14,14 +14,14 @@ PODS:
   - Firebase/Storage (11.0.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 11.0.0)
-  - firebase_auth (5.2.1):
+  - firebase_auth (5.3.0):
     - Firebase/Auth (= 11.0.0)
     - firebase_core
     - Flutter
-  - firebase_core (3.4.1):
+  - firebase_core (3.5.0):
     - Firebase/CoreOnly (= 11.0.0)
     - Flutter
-  - firebase_storage (12.3.0):
+  - firebase_storage (12.3.1):
     - Firebase/Storage (= 11.0.0)
     - firebase_core
     - Flutter
@@ -113,6 +113,9 @@ PODS:
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -125,6 +128,7 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -171,6 +175,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   sqflite:
     :path: ".symlinks/plugins/sqflite/darwin"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 CHECKOUT OPTIONS:
   FirebaseFirestore:
@@ -178,11 +184,11 @@ CHECKOUT OPTIONS:
     :tag: 11.0.0
 
 SPEC CHECKSUMS:
-  cloud_firestore: 6e3caf23a764c0ca66606ce8034d3f395f4d8c64
+  cloud_firestore: efded0403c9e674954e2788d93bc2772a5089557
   Firebase: 9f574c08c2396885b5e7e100ed4293d956218af9
-  firebase_auth: 78dab5e2826921865b33799c66ce7868542beed0
-  firebase_core: ba84e940cf5cbbc601095f86556560937419195c
-  firebase_storage: f333c5a5bd7c4d01fb5a3fdf96493262e4cb779f
+  firebase_auth: f27287630c4d9e2c3c63e64d9240822ad6b07e5b
+  firebase_core: 2ec6b789859c7c24766344ec71fdf78639402d56
+  firebase_storage: 9e484b4e90a239066e535a2ee2b6d662b140372b
   FirebaseAppCheckInterop: e59b52f2c0e188e6ba77b9e3f6acead2117f2abf
   FirebaseAuth: d5cf28be74d7e82257f6a3f717509eff70d3cf4a
   FirebaseAuthInterop: 49e8faefaf254ce578e278a84a8fe0aebe23b546
@@ -208,6 +214,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
 
 PODFILE CHECKSUM: 85cdef437a3e0238dbb9c3b3f53c45fd725b0648
 

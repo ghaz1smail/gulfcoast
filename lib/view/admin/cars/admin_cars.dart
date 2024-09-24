@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:gulfcoast/controllers/admin_controller.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/models/car_model.dart';
-import 'package:gulfcoast/view/admin/cars/add_car_dialog.dart';
+import 'package:gulfcoast/view/admin/cars/add_car_bottom_sheet.dart';
 import 'package:gulfcoast/view/widgets/car_widget.dart';
 import 'package:gulfcoast/view/widgets/custom_loading.dart';
 import 'package:paginate_firestore_plus/paginate_firestore.dart';
@@ -63,7 +63,7 @@ class AdminCars extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          customUi.customDialog(const AddCarDialog());
+          customUi.simpleBottomSheet(const AddCarBottomSheet());
         },
         mini: true,
         child: const Icon(Icons.drive_eta),

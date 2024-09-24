@@ -8,9 +8,12 @@ import 'package:gulfcoast/view/widgets/custom_loading.dart';
 import 'package:gulfcoast/view/widgets/icon_back.dart';
 import 'package:paginate_firestore_plus/paginate_firestore.dart';
 
+var query = firestore.collection('cars').where('userId', isNull: true);
+
 class FilteredCarsScreen extends StatelessWidget {
-  final String year;
-  const FilteredCarsScreen({super.key, this.year = ''});
+  final String year, make, model;
+  const FilteredCarsScreen(
+      {super.key, this.year = '', this.make = '', this.model = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +52,30 @@ class FilteredCarsScreen extends StatelessWidget {
                           documentSnapshots[index].data() as Map);
                       return CarWidget(carData: car);
                     },
-                    query: firestore
-                        .collection('cars')
-                        .where('userId', isNull: true)
-                        .where('year', isEqualTo: year),
+                    query: (year.isEmpty)
+                        ? (make.isEmpty)
+                            ? (model.isEmpty)
+                                ? query
+                                : query.where('model', isEqualTo: model)
+                            : (model.isEmpty)
+                                ? query.where('make', isEqualTo: make)
+                                : query
+                                    .where('make', isEqualTo: make)
+                                    .where('model', isEqualTo: model)
+                        : (make.isEmpty)
+                            ? (model.isEmpty)
+                                ? query.where('model_year', isEqualTo: year)
+                                : query
+                                    .where('model_year', isEqualTo: year)
+                                    .where('model', isEqualTo: model)
+                            : (model.isEmpty)
+                                ? query
+                                    .where('model_year', isEqualTo: year)
+                                    .where('make', isEqualTo: make)
+                                : query
+                                    .where('model_year', isEqualTo: year)
+                                    .where('make', isEqualTo: make)
+                                    .where('model', isEqualTo: model),
                     itemBuilderType: PaginateBuilderType.listView,
                   ))
                 ],

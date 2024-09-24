@@ -12,7 +12,6 @@ import 'package:gulfcoast/models/user_model.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 
 class AdminController extends GetxController {
@@ -277,8 +276,47 @@ class AdminController extends GetxController {
 
     firestore.collection('models').doc(carData.model.toLowerCase()).set({
       'cars': FieldValue.arrayUnion([ref]),
-      'title': carData.model.toLowerCase()
+      'title': carData.model.toLowerCase(),
+      'maker': carData.make.toLowerCase()
     }, SetOptions(merge: true));
+  }
+
+  checkAdditionalCarData(String entredVin) {
+    late WebViewControllerPlus controller;
+    try {
+      controller = WebViewControllerPlus()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(const Color(0x00000000))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (progress) {
+              Get.log(progress.toString());
+              try {
+                Future future = controller.runJavaScriptReturningResult(
+                    "document.documentElement.outerHTML;");
+                future.then((data) {
+                  String html = Platform.isIOS
+                      ? data.toString()
+                      : jsonDecode(data).toString();
+                  if (html.contains('Remove vehicle')) {
+                    Get.log('html');
+                    firestore.collection('cars').doc(entredVin).set({
+                      'images': getCarImages(html),
+                      'lot': getCarLot(html),
+                      'provider': extractProvider(html)
+                    }, SetOptions(merge: true));
+                  }
+                });
+              } catch (e) {
+                //
+              }
+            },
+          ),
+        )
+        ..loadRequest(Uri.parse('https://en.carcheck.by/auto/$entredVin'));
+    } catch (e) {
+      //
+    }
   }
 
   addCar(String enteredVin) async {
@@ -300,7 +338,9 @@ class AdminController extends GetxController {
         'tags': generateCarTag(carData),
         ...carData.toJson()
       }, SetOptions(merge: true));
-      Get.back();
+      vin.clear();
+      // customUi.showToastMessage('vehicle_added');
+      checkAdditionalCarData(enteredVin);
       updateCarFilter(carData);
     }
     addingCar = false;
@@ -329,73 +369,6 @@ class AdminController extends GetxController {
       }
       if (checkCar.errors!.length <= 1) {
         checkCar.specs!.vin = vin;
-        late WebViewControllerPlus controller;
-        try {
-          controller = WebViewControllerPlus()
-            ..setJavaScriptMode(JavaScriptMode.unrestricted)
-            ..setBackgroundColor(const Color(0x00000000))
-            ..setNavigationDelegate(
-              NavigationDelegate(
-                onProgress: (progress) {
-                  Get.log(progress.toString());
-                  try {
-                    Future future = controller.runJavaScriptReturningResult(
-                        "document.documentElement.outerHTML;");
-                    future.then((data) {
-                      String html = Platform.isIOS
-                          ? data.toString()
-                          : jsonDecode(data).toString();
-                      Get.log(html);
-                      if (html.contains('Remove vehicle')) {
-                        Get.log('html');
-                        firestore.collection('cars').doc(vin).set({
-                          'images': getCarImages(html),
-                          'lot': getCarLot(html),
-                          'provider': extractProvider(html)
-                        }, SetOptions(merge: true));
-                      }
-                    });
-                  } catch (e) {
-                    //
-                  }
-                },
-              ),
-            )
-            ..loadRequest(Uri.parse('https://en.carcheck.by/auto/$vin'));
-          // controller = WebViewController()
-          //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          //   ..setNavigationDelegate(
-          //     NavigationDelegate(
-          //       onProgress: (progress) {
-          //         Get.log(progress.toString());
-
-          //         try {
-          //           Future future = controller.runJavaScriptReturningResult(
-          //               "document.documentElement.outerHTML;");
-          //           future.then((data) {
-          //             String html = Platform.isIOS
-          //                 ? data.toString()
-          //                 : jsonDecode(data).toString();
-          //             if (html.contains('Remove vehicle')) {
-          //               Get.log('html');
-          //               firestore.collection('cars').doc(vin).set({
-          //                 'images': getCarImages(html),
-          //                 'lot': getCarLot(html),
-          //                 'provider': extractProvider(html)
-          //               }, SetOptions(merge: true));
-          //               controller.clearCache();
-          //             }
-          //           });
-          //         } catch (e) {
-          //           //
-          //         }
-          //       },
-          //     ),
-          //   )
-          //   ..loadRequest(Uri.parse('https://en.carcheck.by/auto/$vin'));
-        } catch (e) {
-          //
-        }
 
         return checkCar.specs;
       } else {

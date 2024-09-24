@@ -6,6 +6,7 @@ import 'package:gulfcoast/models/user_model.dart';
 import 'package:gulfcoast/view/admin/cars/bottom_sheet_user.dart';
 import 'package:gulfcoast/view/admin/users/user_details_screen.dart';
 import 'package:gulfcoast/view/widgets/cached_network_image.dart';
+import 'package:gulfcoast/view/widgets/custom_button.dart';
 import 'package:gulfcoast/view/widgets/custom_chip.dart';
 import 'package:gulfcoast/view/widgets/icon_back.dart';
 
@@ -136,23 +137,24 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            spacing: 5,
-                            children: [
-                              Icon(adminController
-                                  .iconsSwitch(widget.carData.status)),
-                              Text(
-                                carData!.status.tr,
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                            ],
+                      if (authController.userData != null)
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 5,
+                              children: [
+                                Icon(adminController
+                                    .iconsSwitch(widget.carData.status)),
+                                Text(
+                                  carData!.status.tr,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
                       if (carData!.price.isNotEmpty)
                         Text(
                           '${'aed'.tr} ${carData!.price}',
@@ -185,6 +187,16 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                         title: '${'vin'.tr}: ${carData!.vin}',
                         textToCopy: carData!.vin,
                       )),
+                  if (authController.userData == null)
+                    Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(top: 20),
+                      child: CustomButton(
+                          title: 'contact',
+                          function: () {},
+                          width: 200,
+                          color: appTheme.primaryColor),
+                    ),
                 ],
               ),
             )

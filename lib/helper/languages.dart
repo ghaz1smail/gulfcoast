@@ -96,6 +96,8 @@ class Languages extends Translations {
           'car_for_sale': 'Car for sale',
           'select': 'Select',
           'select_year': 'Select year',
+          'vehicle_added': 'Vehicle added',
+          'contact': 'Contact',
         },
       };
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/view/user/cars/filter/filtered_cars_screen.dart';
+import 'package:gulfcoast/view/user/cars/filter/filter_bottom_sheet.dart';
 import 'package:gulfcoast/view/widgets/custom_button.dart';
 import 'package:gulfcoast/view/widgets/icon_back.dart';
 
@@ -62,11 +63,41 @@ class _FilterScreenState extends State<FilterScreen> {
           )),
           Card(
               child: ListTile(
+            onTap: () {
+              ScrollController customScrollController = ScrollController();
+              customUi.dragAbleBottomSheet(
+                  FilterBottomSheet(
+                    customScrollController: customScrollController,
+                    onTap: (x) {
+                      setState(() {
+                        make = x;
+                      });
+                      Get.back();
+                    },
+                  ),
+                  customScrollController);
+            },
             title: Text('make'.tr),
             trailing: Text(make.isEmpty ? 'select'.tr : make),
           )),
           Card(
               child: ListTile(
+            enabled: make.isNotEmpty,
+            onTap: () {
+              ScrollController customScrollController = ScrollController();
+              customUi.dragAbleBottomSheet(
+                  FilterBottomSheet(
+                    maker: make,
+                    customScrollController: customScrollController,
+                    onTap: (x) {
+                      setState(() {
+                        model = x;
+                      });
+                      Get.back();
+                    },
+                  ),
+                  customScrollController);
+            },
             title: Text('model'.tr),
             trailing: Text(model.isEmpty ? 'select'.tr : model),
           )),
@@ -78,6 +109,8 @@ class _FilterScreenState extends State<FilterScreen> {
               function: () {
                 Get.to(() => FilteredCarsScreen(
                       year: year,
+                      make: make,
+                      model: model,
                     ));
               },
               width: 200,

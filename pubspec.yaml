@@ -30,8 +30,6 @@ dependencies:
   icons_plus: ^5.0.0
   responsive_framework: ^1.5.1
   paginate_firestore_plus: ^1.0.1+2
-  webview_flutter: ^4.9.0
-
   webview_flutter_plus: ^0.4.7
 
 dev_dependencies:
