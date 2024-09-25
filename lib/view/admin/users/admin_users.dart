@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/controllers/admin_controller.dart';
@@ -23,15 +22,15 @@ class AdminUsers extends StatelessWidget {
             },
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: CupertinoSearchTextField(
-                    onChanged: (value) {
-                      controller.fetchSearchUsers();
-                    },
-                    controller: adminController.searchUserController,
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(10),
+                //   child: CupertinoSearchTextField(
+                //     onChanged: (value) {
+                //       controller.fetchSearchUsers();
+                //     },
+                //     controller: adminController.searchUserController,
+                //   ),
+                // ),
                 Expanded(
                     child: PaginateFirestore(
                   onEmpty: SizedBox(
@@ -61,31 +60,7 @@ class AdminUsers extends StatelessWidget {
                       .where('type', isEqualTo: 'user'),
                   itemBuilderType: PaginateBuilderType.listView,
                   isLive: true,
-                )
-                    //  (controller.searchCarController.text.isEmpty
-                    //         ? controller.cars == null
-                    //         : controller.searchCars == null)
-                    //     ? const CustomLoading()
-                    //     : (controller.searchCarController.text.isEmpty
-                    //             ? controller.cars!.isEmpty
-                    //             : controller.searchCars!.isEmpty)
-                    //         ? Center(child: Text('no_data_found'.tr))
-                    //         : ListView.builder(
-                    //             shrinkWrap: true,
-                    //             controller: scrollViewController,
-                    //             itemCount:
-                    //                 controller.searchCarController.text.isEmpty
-                    //                     ? controller.cars?.length
-                    //                     : controller.searchCars?.length,
-                    //             itemBuilder: (context, index) {
-                    //               CarModel car =
-                    //                   controller.searchCarController.text.isEmpty
-                    //                       ? controller.cars![index]
-                    //                       : controller.searchCars![index];
-                    //               return CarWidget(carData: car);
-                    //             },
-                    //           ),
-                    )
+                ))
               ],
             ),
           );

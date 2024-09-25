@@ -10,22 +10,18 @@ import 'package:paginate_firestore_plus/paginate_firestore.dart';
 class BottomSheetUsers extends StatelessWidget {
   final ScrollController customScrollController;
   final CarModel carData;
+  final Function updatingData;
 
   const BottomSheetUsers(
-      {super.key, required this.customScrollController, required this.carData});
+      {super.key,
+      required this.customScrollController,
+      required this.carData,
+      required this.updatingData});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.all(10),
-        //   child: CupertinoSearchTextField(
-        //     onChanged: (value) {},
-        //     controller: adminController.searchCarController,
-        //   ),
-        // ),
-
         Expanded(
             child: PaginateFirestore(
           scrollController: customScrollController,
@@ -43,13 +39,14 @@ class BottomSheetUsers extends StatelessWidget {
                 UserModel.fromJson(documentSnapshots[index].data() as Map);
             return Card(
               child: ListTile(
-                onTap: () {
-                  customUi.customDialog(
-                      SelectUserDialog(
-                        carData: carData,
-                        userData: selectedUser,
-                      ),
-                      dissmiss: false);
+                onTap: () async {
+                  await customUi.simpleBottomSheet(
+                    SelectUserBottomSheet(
+                      carData: carData,
+                      userData: selectedUser,
+                    ),
+                  );
+                  updatingData();
                 },
                 title: Text(selectedUser.name),
               ),

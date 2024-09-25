@@ -10,8 +10,8 @@ class IconBack extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
         onPressed: () {
+          Get.closeAllSnackbars();
           if (onPressed == null) {
-            Get.closeAllSnackbars();
             Get.back();
           } else {
             onPressed!();

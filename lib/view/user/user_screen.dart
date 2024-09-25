@@ -18,6 +18,17 @@ class UserScreen extends StatelessWidget {
                 'app_name'.tr,
                 style: const TextStyle(color: Colors.black),
               ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Get.toNamed('/filter');
+                  },
+                  icon: const Icon(
+                    Icons.filter_alt,
+                    color: Colors.black,
+                  ),
+                )
+              ],
               bottom: TabBar(
                   labelStyle: TextStyle(color: appTheme.primaryColor),
                   indicatorColor: appTheme.primaryColor,

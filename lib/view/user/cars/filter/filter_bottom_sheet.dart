@@ -48,7 +48,7 @@ class FilterBottomSheet extends StatelessWidget {
                 onTap: () {
                   onTap(filter.title);
                 },
-                title: Text(filter.title),
+                title: Text(filter.title.toUpperCase()),
                 trailing: Text('(${filter.cars!.length})'),
               ),
             );

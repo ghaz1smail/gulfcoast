@@ -9,6 +9,7 @@ import 'package:gulfcoast/view/admin/users/bottom_sheet_cars.dart';
 import 'package:gulfcoast/view/widgets/custom_chip.dart';
 import 'package:gulfcoast/view/widgets/custom_loading.dart';
 import 'package:gulfcoast/view/widgets/icon_back.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   final UserModel userData;
@@ -74,6 +75,23 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       '${'password'.tr}: ${adminController.dectyptText(userData!.password, 'gulfPasswordCoast')}',
                   textToCopy: adminController.dectyptText(
                       userData!.password, 'gulfPasswordCoast')),
+              const SizedBox(
+                height: 15,
+              ),
+              GestureDetector(
+                onTap: () {
+                  launchUrl(Uri.parse('tel:${userData!.phone}'));
+                },
+                child: CustomChip(
+                    title: '${'phone'.tr}: ${userData!.phone}',
+                    textToCopy: userData!.username),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              CustomChip(
+                  title: '${'company'.tr}: ${userData!.company}',
+                  textToCopy: userData!.username),
               const Divider(
                 thickness: 2,
                 height: 50,

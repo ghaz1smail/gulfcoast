@@ -41,6 +41,7 @@ class AddCarBottomSheet extends StatelessWidget {
                 CustomButton(
                     title: 'submit',
                     function: () async {
+                      FocusScope.of(context).unfocus();
                       await controller.addCar(controller.vin.text);
                     },
                     width: 200,

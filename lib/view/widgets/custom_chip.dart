@@ -3,8 +3,13 @@ import 'package:flutter/services.dart';
 
 class CustomChip extends StatelessWidget {
   final String title;
+  final double fontSize;
   final String textToCopy;
-  const CustomChip({super.key, required this.title, this.textToCopy = ''});
+  const CustomChip(
+      {super.key,
+      required this.title,
+      this.textToCopy = '',
+      this.fontSize = 20});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,7 @@ class CustomChip extends StatelessWidget {
             borderRadius: BorderRadius.circular(20)),
         child: Text(
           title,
-          style: const TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: fontSize),
         ),
       ),
     );

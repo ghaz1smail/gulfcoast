@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cryptlib_2_0/cryptlib_2_0.dart';
 import 'package:flutter/material.dart';
@@ -9,19 +8,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/models/car_model.dart';
 import 'package:gulfcoast/models/user_model.dart';
-import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' show parse;
-import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 
 class AdminController extends GetxController {
   GetStorage getStorage = GetStorage();
   RxInt selectedIndex = 0.obs;
-  List<ResponseCarModel>? searchCars;
   List<UserModel>? searchUsers;
-  DocumentSnapshot? lastCar, lastUser;
-  final int limit = 20;
-  bool checking = true, addingCar = false;
+  bool checking = true, addingCar = false, settingPrice = false;
   RxBool addingUser = false.obs,
       generatingUserData = false.obs,
       assigning = false.obs;
@@ -30,13 +23,24 @@ class AdminController extends GetxController {
   TextEditingController searchCarController = TextEditingController(),
       searchUserController = TextEditingController(),
       vin = TextEditingController(),
+      price = TextEditingController(),
       userName = TextEditingController(),
       userUsername = TextEditingController(),
+      userCompany = TextEditingController(),
+      userPhone = TextEditingController(),
       userPassword = TextEditingController();
   final url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${appData.apiKey}';
 
-  Map<String, String> headers = {};
+  setPrice(entredVin) async {
+    settingPrice = true;
+    update();
+    await firestore
+        .collection('cars')
+        .doc(entredVin)
+        .update({'price': price.text});
+    Get.back();
+  }
 
   assignUserToCar(CarModel car, UserModel user) async {
     assigning.value = true;
@@ -126,7 +130,20 @@ class AdminController extends GetxController {
   addNewUser() async {
     if (userName.text.isEmpty ||
         userUsername.text.isEmpty ||
+        userPhone.text.isEmpty ||
+        userCompany.text.isEmpty ||
         userPassword.text.length < 6) {
+      customUi.alertDialog(
+        'error_occured',
+        'please_fill_all_fields',
+        {},
+        {
+          'title': 'ok'.tr,
+          'function': () {
+            Get.back();
+          }
+        },
+      );
       return;
     }
 
@@ -149,6 +166,8 @@ class AdminController extends GetxController {
         'username': userUsername.text,
         'email': '${userUsername.text.trim()}@gulfcoast.com',
         'type': 'user',
+        'phone': userPhone.text,
+        'company': userCompany.text,
         'uid': responseData['localId'],
         'name': userName.text,
         'tags': generateNameTag(userName.text),
@@ -175,29 +194,17 @@ class AdminController extends GetxController {
     userName.clear();
     userUsername.clear();
     userPassword.clear();
+    userCompany.clear();
+    userPhone.clear();
     checkName.value = '';
     vin.clear();
+    price.clear();
     showError = '';
     addingCar = false;
+    settingPrice = false;
   }
 
   updateUI() {
-    update();
-  }
-
-  fetchSearchCars() async {
-    final querySnapshot = await firestore.collection('cars').where('tags',
-        arrayContainsAny: [
-          searchCarController.text.removeAllWhitespace.toLowerCase()
-        ]).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      searchCars = querySnapshot.docs
-          .map((doc) => ResponseCarModel.fromJson(doc.data()))
-          .toList();
-    } else {
-      searchCars = [];
-    }
     update();
   }
 
@@ -236,32 +243,29 @@ class AdminController extends GetxController {
     } else {
       await Future.delayed(const Duration(milliseconds: 100));
 
-      Get.offAllNamed('/');
+      Get.offAllNamed('/register');
     }
   }
 
   List<String> generateCarTag(CarModel carData) {
-    List<String> tags = [], vin = [], model = [], make = [];
+    List<String> tags = [];
     for (int i = 1; i <= carData.vin.length; i++) {
-      vin.add(carData.vin.substring(0, i).toLowerCase());
+      tags.add(carData.vin.substring(0, i).toUpperCase());
     }
     for (int i = 1; i <= carData.model.length; i++) {
-      model.add(carData.model.substring(0, i).toLowerCase());
+      tags.add(carData.model.substring(0, i).toUpperCase());
     }
     for (int i = 1; i <= carData.make.length; i++) {
-      make.add(carData.make.substring(0, i).toLowerCase());
+      tags.add(carData.make.substring(0, i).toUpperCase());
     }
 
-    tags.addAll(vin);
-    tags.addAll(model);
-    tags.addAll(make);
     return tags;
   }
 
   List<String> generateNameTag(String name) {
     List<String> tags = [];
     for (int i = 1; i <= name.length; i++) {
-      tags.add(name.substring(0, i).toLowerCase());
+      tags.add(name.substring(0, i).toUpperCase());
     }
 
     return tags;
@@ -269,54 +273,16 @@ class AdminController extends GetxController {
 
   updateCarFilter(CarModel carData) {
     DocumentReference ref = firestore.collection('cars').doc(carData.vin);
-    firestore.collection('makers').doc(carData.make.toLowerCase()).set({
+    firestore.collection('makers').doc(carData.make.toUpperCase()).set({
       'cars': FieldValue.arrayUnion([ref]),
-      'title': carData.make.toLowerCase()
+      'title': carData.make.toUpperCase()
     }, SetOptions(merge: true));
 
-    firestore.collection('models').doc(carData.model.toLowerCase()).set({
+    firestore.collection('models').doc(carData.model.toUpperCase()).set({
       'cars': FieldValue.arrayUnion([ref]),
-      'title': carData.model.toLowerCase(),
-      'maker': carData.make.toLowerCase()
+      'title': carData.model.toUpperCase(),
+      'maker': carData.make.toUpperCase()
     }, SetOptions(merge: true));
-  }
-
-  checkAdditionalCarData(String entredVin) {
-    late WebViewControllerPlus controller;
-    try {
-      controller = WebViewControllerPlus()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0x00000000))
-        ..setNavigationDelegate(
-          NavigationDelegate(
-            onProgress: (progress) {
-              Get.log(progress.toString());
-              try {
-                Future future = controller.runJavaScriptReturningResult(
-                    "document.documentElement.outerHTML;");
-                future.then((data) {
-                  String html = Platform.isIOS
-                      ? data.toString()
-                      : jsonDecode(data).toString();
-                  if (html.contains('Remove vehicle')) {
-                    Get.log('html');
-                    firestore.collection('cars').doc(entredVin).set({
-                      'images': getCarImages(html),
-                      'lot': getCarLot(html),
-                      'provider': extractProvider(html)
-                    }, SetOptions(merge: true));
-                  }
-                });
-              } catch (e) {
-                //
-              }
-            },
-          ),
-        )
-        ..loadRequest(Uri.parse('https://en.carcheck.by/auto/$entredVin'));
-    } catch (e) {
-      //
-    }
   }
 
   addCar(String enteredVin) async {
@@ -328,51 +294,75 @@ class AdminController extends GetxController {
     }
     addingCar = true;
     update();
-    CarModel? carData = await getCarData(enteredVin);
-    if (carData == null) {
-      showError = 'no_data_found';
-    } else {
-      showError = '';
-      await firestore.collection('cars').doc(enteredVin).set({
-        'timestamp': DateTime.now().toIso8601String(),
-        'tags': generateCarTag(carData),
-        ...carData.toJson()
-      }, SetOptions(merge: true));
-      vin.clear();
-      // customUi.showToastMessage('vehicle_added');
-      checkAdditionalCarData(enteredVin);
-      updateCarFilter(carData);
-    }
+    await firestore.collection('cars').doc(enteredVin).get().then((t) async {
+      if (t.exists) {
+        showError = 'the_car_is_already_exists';
+      } else {
+        CarModel? carData = await getCarData(enteredVin);
+        if (carData == null) {
+          showError = 'no_data_found';
+        } else {
+          showError = '';
+          await firestore.collection('cars').doc(enteredVin).set({
+            'timestamp': DateTime.now().toIso8601String(),
+            'tags': generateCarTag(carData),
+            ...carData.toJson()
+          }, SetOptions(merge: true));
+          vin.clear();
+          updateCarFilter(carData);
+        }
+      }
+    });
+
     addingCar = false;
     update();
   }
 
   Future<CarModel?> getCarData(String vin) async {
-    ResponseCarModel? checkCar;
+    CarModel? checkCar;
     try {
-      var headers = {
-        'x-rapidapi-host': 'car-utils.p.rapidapi.com',
-        'x-rapidapi-key': 'cddfad3d30msh687ccf59d2e11a3p16c8e5jsnc4b8c97f25e2'
-      };
-      var requestData = http.Request('GET',
-          Uri.parse('https://car-utils.p.rapidapi.com/vindecoder?vin=$vin'));
+      var headers = {'x-AuthKey': 'bc49ab6716d44747b7765a9729564a84'};
+      var request = http.Request(
+          'GET', Uri.parse('https://api.vehicledatabases.com/auction/$vin'));
 
-      requestData.headers.addAll(headers);
+      request.headers.addAll(headers);
 
-      http.StreamedResponse responseData = await requestData.send();
-      String data = await responseData.stream.bytesToString();
-
-      if (responseData.statusCode == 200) {
-        checkCar = ResponseCarModel.fromJson(jsonDecode(data));
+      http.StreamedResponse response = await request.send();
+      Get.log('doneResponse');
+      String data = await response.stream.bytesToString();
+      if (response.statusCode == 200) {
+        Get.log('doneDataBase');
+        checkCar = VehicleData.fromJson(jsonDecode(data), true).carData;
+        return checkCar;
       } else {
-        return null;
-      }
-      if (checkCar.errors!.length <= 1) {
-        checkCar.specs!.vin = vin;
+        Get.log('mmm');
+        var headers = {
+          'x-rapidapi-host': 'car-utils.p.rapidapi.com',
+          'x-rapidapi-key': 'cddfad3d30msh687ccf59d2e11a3p16c8e5jsnc4b8c97f25e2'
+        };
+        var requestData = http.Request('GET',
+            Uri.parse('https://car-utils.p.rapidapi.com/vindecoder?vin=$vin'));
 
-        return checkCar.specs;
-      } else {
-        return null;
+        requestData.headers.addAll(headers);
+
+        http.StreamedResponse responseData = await requestData.send();
+        String data = await responseData.stream.bytesToString();
+        Get.log('DoneResponsemmmm');
+        if (responseData.statusCode == 200) {
+          Get.log('DoneDatammmm');
+          var r = VehicleData.fromJson(jsonDecode(data), false);
+          if (r.errors!.first.toString().startsWith('0')) {
+            checkCar = r.carData;
+            checkCar!.vin = vin;
+            return checkCar;
+          } else {
+            customUi.showToastMessage(
+                'something_went_wrong_try_again_later_or_try_another_vin');
+            return null;
+          }
+        } else {
+          return null;
+        }
       }
     } catch (e) {
       Get.log('Error: $e');
@@ -380,38 +370,5 @@ class AdminController extends GetxController {
           'something_went_wrong_try_again_later_or_try_another_vin');
     }
     return null;
-  }
-
-  String extractProvider(String htmlContent) {
-    final document = parse(htmlContent);
-    final iaaiDiv = document.querySelector('div.hleb');
-    if (iaaiDiv != null) {
-      final iaaiText = iaaiDiv.text;
-      final parts = iaaiText.split('›');
-      return parts.isNotEmpty ? parts[0].trim() : '';
-    }
-    return '';
-  }
-
-  String getCarLot(String htmlContent) {
-    final document = parse(htmlContent);
-    final lotSpan = document.querySelector('div.block:nth-child(7) span');
-    return lotSpan?.text ?? '';
-  }
-
-  List<String> getCarImages(String htmlContent) {
-    final document = parse(htmlContent);
-    final carouselDiv = document.querySelector('#owl_big');
-
-    if (carouselDiv != null) {
-      final imgElements = carouselDiv.getElementsByTagName('img');
-
-      return imgElements
-          .map((img) => img.attributes['src'] ?? '')
-          .where((w) => !w.contains('noimage'))
-          .toList();
-    }
-
-    return [];
   }
 }

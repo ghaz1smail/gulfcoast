@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>sms</string>
+			<string>tel</string>
+		</array>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -16,6 +21,8 @@
 		<string>gulfcoast</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+	<string>Golf Coast want to access your photos to upload car images</string>
 		<key>CFBundleShortVersionString</key>
 		<string>$(FLUTTER_BUILD_NAME)</string>
 		<key>CFBundleSignature</key>

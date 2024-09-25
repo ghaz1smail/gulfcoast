@@ -21,50 +21,63 @@ class AddUserScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              CustomTextField(
-                hint: 'name',
-                controller: adminController.userName,
-                onChange: (x) {
-                  adminController.changeNameText(x);
-                },
-              ),
-              CustomTextField(
-                hint: 'username',
-                controller: adminController.userUsername,
-              ),
-              CustomTextField(
-                hint: 'password',
-                controller: adminController.userPassword,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Obx(
-                () => CustomButton(
-                    title: 'submit',
-                    function: () {
-                      adminController.addNewUser();
-                    },
-                    width: Get.width,
-                    loading: adminController.addingUser.value,
-                    color: appTheme.primaryColor),
-              ),
-              const Spacer(),
-              Obx(
-                () => adminController.checkName.value.isEmpty
-                    ? const SizedBox()
-                    : CustomButton(
-                        title: 'generate_data_from_name',
-                        function: () {
-                          adminController.generateDataFromName();
-                        },
-                        width: 100,
-                        loading: adminController.generatingUserData.value,
-                        color: appTheme.primaryColor),
-              )
-            ],
+          child: Form(
+            key: key,
+            child: ListView(
+              children: [
+                CustomTextField(
+                  hint: 'name',
+                  controller: adminController.userName,
+                  onChange: (x) {
+                    adminController.changeNameText(x);
+                  },
+                ),
+                CustomTextField(
+                  hint: 'username',
+                  controller: adminController.userUsername,
+                ),
+                CustomTextField(
+                  hint: 'password',
+                  controller: adminController.userPassword,
+                ),
+                CustomTextField(
+                  hint: 'company',
+                  controller: adminController.userCompany,
+                ),
+                CustomTextField(
+                  hint: 'phone',
+                  controller: adminController.userPhone,
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Obx(
+                  () => CustomButton(
+                      title: 'submit',
+                      function: () {
+                        adminController.addNewUser();
+                      },
+                      width: Get.width,
+                      loading: adminController.addingUser.value,
+                      color: appTheme.primaryColor),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Obx(
+                  () => adminController.checkName.value.isEmpty
+                      ? const SizedBox()
+                      : CustomButton(
+                          title: 'generate_data_from_name',
+                          function: () {
+                            adminController.generateDataFromName();
+                          },
+                          width: 100,
+                          loading: adminController.generatingUserData.value,
+                          color: appTheme.primaryColor),
+                )
+              ],
+            ),
           ),
         ),
       ),

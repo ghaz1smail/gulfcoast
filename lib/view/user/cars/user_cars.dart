@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/controllers/user_controller.dart';
@@ -26,12 +25,12 @@ class UserCars extends StatelessWidget {
           child: SafeArea(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: CupertinoSearchTextField(
-                    onChanged: (value) {},
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(10),
+                //   child: CupertinoSearchTextField(
+                //     onChanged: (value) {},
+                //   ),
+                // ),
                 Expanded(
                     child: PaginateFirestore(
                   onEmpty: SizedBox(

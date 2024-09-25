@@ -11,30 +11,23 @@ class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController(),
       passwordController = TextEditingController();
   UserModel? userData;
-  bool loading = false, admin = false, checking = true;
+  bool loading = false, admin = false;
   AppModel appData = AppModel();
 
-  @override
-  void onInit() {
-    checkUserAvailable();
-    super.onInit();
-  }
-
-  checkUserAvailable({bool goHome = true}) async {
-    checking = true;
+  checkUserAvailable() async {
+    await getAppInfo();
     await getCurrentUserData();
+
     if (userData != null) {
-      if (goHome) {
-        if (userData!.type == 'admin') {
-          admin = true;
-          await Get.offAllNamed('/admin');
-        } else {
-          await Get.offAllNamed('/home');
-        }
+      if (userData!.type == 'admin') {
+        admin = true;
+        Get.offAllNamed('/admin');
+      } else {
+        Get.offAllNamed('/home');
       }
+    } else {
+      Get.offAllNamed('/register');
     }
-    checking = false;
-    update();
   }
 
   Future<UserModel?> getUserData(String uid) async {
@@ -123,7 +116,7 @@ class AuthController extends GetxController {
     if (firebaseAuth.currentUser != null) {
       firebaseAuth.signOut();
     }
-    Get.offAllNamed('/');
+    Get.offAllNamed('/register');
   }
 
   clearData() async {
@@ -133,6 +126,7 @@ class AuthController extends GetxController {
 
   getCurrentUserData() async {
     var uid = getStorage.read('uid');
+    Get.log(uid);
     if (uid != null) {
       await firestore.collection('users').doc(uid).get().then((value) async {
         if (value.exists) {
@@ -144,10 +138,22 @@ class AuthController extends GetxController {
     }
   }
 
+  getAppInfo() async {
+    await firestore
+        .collection('appData')
+        .doc('appData')
+        .get()
+        .then((value) async {
+      appData = AppModel.fromJson(value.data() as Map);
+    }).onError((e, e1) {
+      return;
+    });
+  }
+
   navigator() async {
     await getCurrentUserData();
     if (userData == null) {
-      Get.offAllNamed('/');
+      Get.offAllNamed('/register');
     } else {
       if (userData!.type == 'admin') {
         admin = true;

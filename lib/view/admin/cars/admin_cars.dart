@@ -29,7 +29,7 @@ class AdminCars extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: CupertinoSearchTextField(
                       onChanged: (value) {
-                        controller.fetchSearchCars();
+                        controller.updateUI();
                       },
                       controller: adminController.searchCarController,
                     ),

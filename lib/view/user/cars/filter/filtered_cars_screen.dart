@@ -4,6 +4,7 @@ import 'package:gulfcoast/controllers/user_controller.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/models/car_model.dart';
 import 'package:gulfcoast/view/widgets/car_widget.dart';
+import 'package:gulfcoast/view/widgets/custom_chip.dart';
 import 'package:gulfcoast/view/widgets/custom_loading.dart';
 import 'package:gulfcoast/view/widgets/icon_back.dart';
 import 'package:paginate_firestore_plus/paginate_firestore.dart';
@@ -35,6 +36,27 @@ class FilteredCarsScreen extends StatelessWidget {
             child: SafeArea(
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (year.isNotEmpty)
+                        CustomChip(
+                          title: year,
+                          fontSize: 14,
+                        ),
+                      if (make.isNotEmpty)
+                        CustomChip(
+                          title: make,
+                          fontSize: 14,
+                        ),
+                      if (model.isNotEmpty)
+                        CustomChip(
+                          title: model,
+                          fontSize: 14,
+                        )
+                    ],
+                  ),
+                  const Divider(),
                   Expanded(
                       child: PaginateFirestore(
                     onEmpty: SizedBox(

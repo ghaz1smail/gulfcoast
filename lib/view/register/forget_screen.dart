@@ -55,7 +55,7 @@ class ForgetScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.offAllNamed('/');
+                      Get.offAllNamed('/register');
                     },
                     child: Text(
                       'back'.tr,

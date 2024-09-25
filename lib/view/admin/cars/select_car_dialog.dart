@@ -4,10 +4,10 @@ import 'package:gulfcoast/helper/get_initial.dart';
 import 'package:gulfcoast/models/car_model.dart';
 import 'package:gulfcoast/models/user_model.dart';
 
-class SelectUserDialog extends StatelessWidget {
+class SelectUserBottomSheet extends StatelessWidget {
   final CarModel carData;
   final UserModel userData;
-  const SelectUserDialog(
+  const SelectUserBottomSheet(
       {super.key, required this.carData, required this.userData});
 
   @override

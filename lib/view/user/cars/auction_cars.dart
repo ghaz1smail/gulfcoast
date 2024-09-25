@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/controllers/user_controller.dart';
@@ -23,6 +22,17 @@ class AuctionCars extends StatelessWidget {
                 style: const TextStyle(color: Colors.black),
               ),
               leading: const IconBack(),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Get.toNamed('/filter');
+                  },
+                  icon: const Icon(
+                    Icons.filter_alt,
+                    color: Colors.black,
+                  ),
+                )
+              ],
             )
           : null,
       body: GetBuilder(
@@ -33,78 +43,25 @@ class AuctionCars extends StatelessWidget {
               controller.updateUI();
             },
             child: SafeArea(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: CupertinoSearchTextField(
-                            onChanged: (value) {},
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed('/filter');
-                          },
-                          child: const Icon(Icons.filter_alt),
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                      child: PaginateFirestore(
-                    onEmpty: SizedBox(
-                      height: Get.height * 0.75,
-                      child: Center(
-                          child: Text(
-                        'no_data_found'.tr,
-                      )),
-                    ),
-                    initialLoader: SizedBox(
-                        height: Get.height * 0.75,
-                        child: const CustomLoading()),
-                    itemBuilder: (context, documentSnapshots, index) {
-                      CarModel car = CarModel.fromJson(
-                          documentSnapshots[index].data() as Map);
-                      return CarWidget(carData: car);
-                    },
-                    query: firestore
-                        .collection('cars')
-                        .where('userId', isNull: true),
-                    itemBuilderType: PaginateBuilderType.listView,
-                    isLive: true,
-                  )
-
-                      //  (controller.searchCarController.text.isEmpty
-                      //         ? controller.cars == null
-                      //         : controller.searchCars == null)
-                      //     ? const CustomLoading()
-                      //     : (controller.searchCarController.text.isEmpty
-                      //             ? controller.cars!.isEmpty
-                      //             : controller.searchCars!.isEmpty)
-                      //         ? Center(child: Text('no_data_found'.tr))
-                      //         : ListView.builder(
-                      //             shrinkWrap: true,
-                      //             controller: scrollViewController,
-                      //             itemCount:
-                      //                 controller.searchCarController.text.isEmpty
-                      //                     ? controller.cars?.length
-                      //                     : controller.searchCars?.length,
-                      //             itemBuilder: (context, index) {
-                      //               CarModel car =
-                      //                   controller.searchCarController.text.isEmpty
-                      //                       ? controller.cars![index]
-                      //                       : controller.searchCars![index];
-                      //               return CarWidget(carData: car);
-                      //             },
-                      //           ),
-                      )
-                ],
+              child: PaginateFirestore(
+                onEmpty: SizedBox(
+                  height: Get.height * 0.75,
+                  child: Center(
+                      child: Text(
+                    'no_data_found'.tr,
+                  )),
+                ),
+                initialLoader: SizedBox(
+                    height: Get.height * 0.75, child: const CustomLoading()),
+                itemBuilder: (context, documentSnapshots, index) {
+                  CarModel car =
+                      CarModel.fromJson(documentSnapshots[index].data() as Map);
+                  return CarWidget(carData: car);
+                },
+                query:
+                    firestore.collection('cars').where('userId', isNull: true),
+                itemBuilderType: PaginateBuilderType.listView,
+                isLive: true,
               ),
             ),
           );
