@@ -90,4 +90,10 @@ class CustomUi {
         ),
         barrierDismissible: dissmiss);
   }
+
+  Color colorCompute(color) {
+    return Color(int.parse(color.toString())).computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white;
+  }
 }

@@ -35,26 +35,58 @@ class AdminCars extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                      child: PaginateFirestore(
-                    onEmpty: SizedBox(
-                      height: Get.height * 0.75,
-                      child: Center(
-                          child: Text(
-                        'no_data_found'.tr,
-                      )),
-                    ),
-                    initialLoader: SizedBox(
-                        height: Get.height * 0.75,
-                        child: const CustomLoading()),
-                    itemBuilder: (context, documentSnapshots, index) {
-                      CarModel car = CarModel.fromJson(
-                          documentSnapshots[index].data() as Map);
-                      return CarWidget(carData: car);
-                    },
-                    query: firestore.collection('cars'),
-                    itemBuilderType: PaginateBuilderType.listView,
-                    isLive: true,
-                  ))
+                      child: adminController.searchCarController.text.isNotEmpty
+                          ? FutureBuilder(
+                              future: firestore
+                                  .collection('cars')
+                                  .where('tags', arrayContainsAny: [
+                                adminController.searchCarController.text
+                                    .removeAllWhitespace
+                                    .toUpperCase(),
+                              ]).get(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  List<CarModel> cars = snapshot.data!.docs
+                                      .map((m) => CarModel.fromJson(m.data()))
+                                      .toList();
+
+                                  if (cars.isEmpty) {
+                                    return Center(
+                                        child: Text(
+                                      'no_data_found'.tr,
+                                    ));
+                                  }
+                                  return ListView.builder(
+                                    itemCount: cars.length,
+                                    itemBuilder: (context, index) {
+                                      CarModel car = cars[index];
+                                      return CarWidget(carData: car);
+                                    },
+                                  );
+                                }
+                                return const CustomLoading();
+                              },
+                            )
+                          : PaginateFirestore(
+                              onEmpty: SizedBox(
+                                height: Get.height * 0.75,
+                                child: Center(
+                                    child: Text(
+                                  'no_data_found'.tr,
+                                )),
+                              ),
+                              initialLoader: SizedBox(
+                                  height: Get.height * 0.75,
+                                  child: const CustomLoading()),
+                              itemBuilder: (context, documentSnapshots, index) {
+                                CarModel car = CarModel.fromJson(
+                                    documentSnapshots[index].data() as Map);
+                                return CarWidget(carData: car);
+                              },
+                              query: firestore.collection('cars'),
+                              itemBuilderType: PaginateBuilderType.listView,
+                              isLive: true,
+                            ))
                 ],
               ),
             ),

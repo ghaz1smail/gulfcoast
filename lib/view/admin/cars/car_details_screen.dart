@@ -96,19 +96,28 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const IconBack(),
-        actions: [
-          if (authController.admin)
-            TextButton(
-                onPressed: () async {
-                  adminController.price.text = carData!.price;
-                  await customUi.simpleBottomSheet(SetPriceBottomSheet(
-                      vin: carData!.vin, updatingData: getCarData));
-                },
-                child: Text(
-                  'set_price'.tr,
-                  style: TextStyle(color: appTheme.primaryColor),
-                ))
-        ],
+        actions: !authController.admin
+            ? null
+            : [
+                TextButton(
+                    onPressed: () async {
+                      adminController.price.text = carData!.price;
+                      await customUi.simpleBottomSheet(SetPriceBottomSheet(
+                          vin: carData!.vin, updatingData: getCarData));
+                    },
+                    child: Text(
+                      'set_price'.tr,
+                      style: TextStyle(color: appTheme.primaryColor),
+                    )),
+                // IconButton(
+                //     onPressed: () {
+
+                //     },
+                //     icon: Icon(
+                //       Icons.photo,
+                //       color: appTheme.primaryColor,
+                //     ))
+              ],
       ),
       body: loading
           ? const CustomLoading()
@@ -268,58 +277,73 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                           child: CustomChip(
                             title: '${'make'.tr}: ${carData!.make}',
                             textToCopy: carData!.make,
                           ),
                         ),
-                        CustomChip(
-                            title: '${'model'.tr}: ${carData!.model}',
-                            textToCopy: carData!.model),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: CustomChip(
+                              title: '${'model'.tr}: ${carData!.model}',
+                              textToCopy: carData!.model),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                           child: CustomChip(
                               title: '${'year'.tr}: ${carData!.modelYear}',
                               textToCopy: carData!.modelYear),
                         ),
                         if (carData!.fuelType.isNotEmpty)
-                          CustomChip(
-                              title: '${'fuel_type'.tr}: ${carData!.fuelType}'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: CustomChip(
+                                title:
+                                    '${'fuel_type'.tr}: ${carData!.fuelType}'),
+                          ),
                         Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                             child: CustomChip(
                               title: '${'vin'.tr}: ${carData!.vin}',
                               textToCopy: carData!.vin,
                             )),
                         if (carData!.lotNumber.isNotEmpty)
-                          CustomChip(
-                              title: '${'lot'.tr}: #${carData!.lotNumber}'),
-                        carData!.invoice.isEmpty
-                            ? authController.admin
-                                ? ListTile(
-                                    onTap: () {
-                                      pickImage();
-                                    },
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Icon(Icons.attach_file,
-                                        color: appTheme.primaryColor),
-                                    title: Text('attach_invoice'.tr),
-                                  )
-                                : const SizedBox()
-                            : GestureDetector(
-                                onTap: () {
-                                  Get.to(() =>
-                                      FullScreen(urls: [carData!.invoice]));
-                                },
-                                child: ClipRRect(
-                                  child: CustomImageNetwork(
-                                      url: carData!.invoice,
-                                      width: 200,
-                                      height: 200,
-                                      boxFit: BoxFit.cover),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: CustomChip(
+                                title: '${'lot'.tr}: #${carData!.lotNumber}'),
+                          ),
+                        if (authController.userData != null)
+                          carData!.invoice.isEmpty
+                              ? authController.admin
+                                  ? ListTile(
+                                      onTap: () {
+                                        pickImage();
+                                      },
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: Icon(Icons.attach_file,
+                                          color: appTheme.primaryColor),
+                                      title: Text('attach_invoice'.tr),
+                                    )
+                                  : const SizedBox()
+                              : GestureDetector(
+                                  onTap: () {
+                                    Get.to(() =>
+                                        FullScreen(urls: [carData!.invoice]));
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: ClipRRect(
+                                      child: CustomImageNetwork(
+                                          url: carData!.invoice,
+                                          width: 200,
+                                          height: 200,
+                                          boxFit: BoxFit.cover),
+                                    ),
+                                  ),
                                 ),
-                              ),
                         if (authController.userData != null)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

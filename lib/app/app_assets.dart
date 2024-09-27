@@ -1,8 +1,5 @@
 class AppAssets {
-  //images
-  // final logo = 'assets/images/logo.png';
-  // final homeWall = 'assets/images/home.jpg';
-
   //lottes
-  final logIn = 'assets/lotties/log_in.json';
+  final loading = 'assets/lotties/loading.json';
+  final splash = 'assets/lotties/splash.json';
 }

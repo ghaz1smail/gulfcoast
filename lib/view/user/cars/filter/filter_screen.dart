@@ -70,7 +70,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     customScrollController: customScrollController,
                     onTap: (x) {
                       setState(() {
-                        make = x.toString().toLowerCase();
+                        make = x.toString();
                       });
                       Get.back();
                     },
@@ -78,7 +78,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   customScrollController);
             },
             title: Text('make'.tr),
-            trailing: Text(make.isEmpty ? 'select'.tr : make.toUpperCase()),
+            trailing: Text(make.isEmpty ? 'select'.tr : make),
           )),
           Card(
               child: ListTile(
@@ -91,7 +91,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     customScrollController: customScrollController,
                     onTap: (x) {
                       setState(() {
-                        model = x.toString().toLowerCase();
+                        model = x.toString();
                       });
                       Get.back();
                     },
@@ -99,7 +99,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   customScrollController);
             },
             title: Text('model'.tr),
-            trailing: Text(model.isEmpty ? 'select'.tr : model.toUpperCase()),
+            trailing: Text(model.isEmpty ? 'select'.tr : model),
           )),
           const SizedBox(
             height: 25,

@@ -115,6 +115,8 @@ class Languages extends Translations {
           'please_fill_all_fields': 'Please fill all fields',
           'attach_invoice': 'Attach invoice',
           'the_car_is_already_exists': 'The car is already exists',
+          'welcome_back': 'Welcome back',
+          'or': 'OR',
         },
       };
 }

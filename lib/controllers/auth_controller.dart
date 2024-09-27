@@ -126,7 +126,6 @@ class AuthController extends GetxController {
 
   getCurrentUserData() async {
     var uid = getStorage.read('uid');
-    Get.log(uid);
     if (uid != null) {
       await firestore.collection('users').doc(uid).get().then((value) async {
         if (value.exists) {

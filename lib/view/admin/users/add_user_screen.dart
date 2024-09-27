@@ -46,6 +46,7 @@ class AddUserScreen extends StatelessWidget {
                 ),
                 CustomTextField(
                   hint: 'phone',
+                  type: TextInputType.phone,
                   controller: adminController.userPhone,
                 ),
                 const SizedBox(

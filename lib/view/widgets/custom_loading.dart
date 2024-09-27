@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
+import 'package:lottie/lottie.dart';
 
 class CustomLoading extends StatelessWidget {
   const CustomLoading({super.key, this.size = 100});
@@ -8,8 +9,6 @@ class CustomLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: CircularProgressIndicator(
-      color: appTheme.primaryColor,
-    ));
+        child: Lottie.asset(appAssets.loading, height: 250, width: 250));
   }
 }

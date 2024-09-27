@@ -32,74 +32,63 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Text(
-            widget.hint.tr,
-            style: const TextStyle(fontSize: 22, color: Colors.black),
+    return TextFormField(
+      autocorrect: false,
+      maxLength: widget.length == 0 ? null : widget.length,
+      minLines: widget.type == TextInputType.multiline ? null : 1,
+      maxLines: widget.type == TextInputType.multiline ? 3 : 1,
+      onChanged: (value) {
+        if (widget.onChange != null) {
+          widget.onChange!(value);
+        }
+      },
+      onFieldSubmitted: (w) {
+        if (widget.onSubmit != null) {
+          widget.onSubmit!(w);
+        }
+      },
+      cursorColor: appTheme.primaryColor,
+      autofillHints: widget.autofill,
+      controller: widget.controller,
+      keyboardType: widget.type,
+      inputFormatters: widget.type == TextInputType.number
+          ? [FilteringTextInputFormatter.digitsOnly]
+          : null,
+      obscureText: widget.secure ? showPass : false,
+      decoration: InputDecoration(
+        labelText: widget.hint.tr,
+        labelStyle: TextStyle(
+          fontSize: 16,
+          color: appTheme.primaryColor,
+        ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        counterText: "",
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 15,
+        ),
+        suffixIcon: widget.secure && widget.controller!.text.isNotEmpty
+            ? TextButton(
+                onPressed: (() {
+                  setState(() {
+                    showPass = !showPass;
+                  });
+                }),
+                child: Text(showPass ? 'show'.tr : 'hide'.tr,
+                    style: TextStyle(
+                        color: appTheme.primaryColor,
+                        fontWeight: FontWeight.bold)))
+            : null,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(
+            7.5,
           ),
         ),
-        SizedBox(
-          height: 45,
-          child: TextFormField(
-            autocorrect: false,
-            maxLength: widget.length == 0 ? null : widget.length,
-            minLines: widget.type == TextInputType.multiline ? null : 1,
-            maxLines: widget.type == TextInputType.multiline ? 3 : 1,
-            onChanged: (value) {
-              setState(() {});
-              if (widget.onChange != null) {
-                widget.onChange!(value);
-              }
-            },
-            onFieldSubmitted: (w) {
-              if (widget.onSubmit != null) {
-                widget.onSubmit!(w);
-              }
-            },
-            cursorColor: appTheme.primaryColor,
-            autofillHints: widget.autofill,
-            controller: widget.controller,
-            keyboardType: widget.type,
-            inputFormatters: widget.type == TextInputType.number
-                ? [FilteringTextInputFormatter.digitsOnly]
-                : null,
-            obscureText: widget.secure ? showPass : false,
-            decoration: InputDecoration(
-              counterText: "",
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              suffixIcon: widget.secure && widget.controller!.text.isNotEmpty
-                  ? TextButton(
-                      onPressed: (() {
-                        setState(() {
-                          showPass = !showPass;
-                        });
-                      }),
-                      child: Text(showPass ? 'show'.tr : 'hide'.tr,
-                          style: TextStyle(
-                              color: appTheme.primaryColor,
-                              fontWeight: FontWeight.bold)))
-                  : null,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  10,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    10,
-                  ),
-                  borderSide:
-                      BorderSide(color: appTheme.primaryColor, width: 2)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+              7.5,
             ),
-          ),
-        ),
-      ],
+            borderSide: BorderSide(color: appTheme.primaryColor, width: 2)),
+      ),
     );
   }
 }

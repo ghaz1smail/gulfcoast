@@ -31,19 +31,15 @@ class GetInitial {
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+//
 AppData appData = AppData();
-AppAssets assets = AppAssets();
+AppAssets appAssets = AppAssets();
 AppTheme appTheme = AppTheme();
+//
 GetStorage getStorage = GetStorage();
 CustomUi customUi = CustomUi();
 CustomFormats customFormats = CustomFormats();
+//
 AuthController authController = Get.find<AuthController>();
 UserController userController = Get.find<UserController>();
-
 AdminController adminController = Get.find<AdminController>();
-
-Color colorCompute(color) {
-  return Color(int.parse(color.toString())).computeLuminance() > 0.5
-      ? Colors.black
-      : Colors.white;
-}

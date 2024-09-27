@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
-import 'package:gulfcoast/view/widgets/custom_loading.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -8,8 +8,10 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     authController.checkUserAvailable();
-    return const Scaffold(
-      body: CustomLoading(),
+    return Scaffold(
+      body: Center(
+        child: Lottie.asset(appAssets.splash),
+      ),
     );
   }
 }

@@ -308,6 +308,8 @@ class AdminController extends GetxController {
             'tags': generateCarTag(carData),
             ...carData.toJson()
           }, SetOptions(merge: true));
+          Get.back();
+          customUi.showToastMessage('vehicle_added');
           vin.clear();
           updateCarFilter(carData);
         }
@@ -321,21 +323,22 @@ class AdminController extends GetxController {
   Future<CarModel?> getCarData(String vin) async {
     CarModel? checkCar;
     try {
-      var headers = {'x-AuthKey': 'bc49ab6716d44747b7765a9729564a84'};
+      var headers = {'x-AuthKey': authController.appData.vehicledatabases};
       var request = http.Request(
           'GET', Uri.parse('https://api.vehicledatabases.com/auction/$vin'));
 
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
-      Get.log('doneResponse');
+
       String data = await response.stream.bytesToString();
+      Get.log('vehicledatabases: ${response.statusCode}: $data');
       if (response.statusCode == 200) {
-        Get.log('doneDataBase');
+        Get.log('doneVehicledatabases');
         checkCar = VehicleData.fromJson(jsonDecode(data), true).carData;
         return checkCar;
       } else {
-        Get.log('mmm');
+        Get.log('rapidapi');
         var headers = {
           'x-rapidapi-host': 'car-utils.p.rapidapi.com',
           'x-rapidapi-key': 'cddfad3d30msh687ccf59d2e11a3p16c8e5jsnc4b8c97f25e2'
@@ -347,11 +350,11 @@ class AdminController extends GetxController {
 
         http.StreamedResponse responseData = await requestData.send();
         String data = await responseData.stream.bytesToString();
-        Get.log('DoneResponsemmmm');
+        Get.log('rapidapi: ${responseData.statusCode}: $data');
         if (responseData.statusCode == 200) {
-          Get.log('DoneDatammmm');
           var r = VehicleData.fromJson(jsonDecode(data), false);
           if (r.errors!.first.toString().startsWith('0')) {
+            Get.log('doneRapidapi');
             checkCar = r.carData;
             checkCar!.vin = vin;
             return checkCar;

@@ -64,6 +64,8 @@ class CarModel {
         price: json['price']
             .toString()
             .replaceAll('N/A', '')
+            .replaceAll('\$', '')
+            .replaceAll(',', '')
             .replaceAll('null', ''));
   }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/controllers/admin_controller.dart';
@@ -22,45 +23,88 @@ class AdminUsers extends StatelessWidget {
             },
             child: Column(
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.all(10),
-                //   child: CupertinoSearchTextField(
-                //     onChanged: (value) {
-                //       controller.fetchSearchUsers();
-                //     },
-                //     controller: adminController.searchUserController,
-                //   ),
-                // ),
-                Expanded(
-                    child: PaginateFirestore(
-                  onEmpty: SizedBox(
-                    height: Get.height * 0.75,
-                    child: Center(
-                        child: Text(
-                      'no_data_found'.tr,
-                    )),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: CupertinoSearchTextField(
+                    onChanged: (value) {
+                      controller.fetchSearchUsers();
+                    },
+                    controller: adminController.searchUserController,
                   ),
-                  initialLoader: SizedBox(
-                      height: Get.height * 0.75, child: const CustomLoading()),
-                  itemBuilder: (context, documentSnapshots, index) {
-                    UserModel user = UserModel.fromJson(
-                        documentSnapshots[index].data() as Map);
-                    return Card(
-                      child: ListTile(
-                        onTap: () async {
-                          await Get.to(() => UserDetailsScreen(userData: user));
-                          controller.updateUI();
-                        },
-                        title: Text(user.name),
-                      ),
-                    );
-                  },
-                  query: firestore
-                      .collection('users')
-                      .where('type', isEqualTo: 'user'),
-                  itemBuilderType: PaginateBuilderType.listView,
-                  isLive: true,
-                ))
+                ),
+                Expanded(
+                    child: adminController.searchUserController.text.isNotEmpty
+                        ? FutureBuilder(
+                            future: firestore
+                                .collection('users')
+                                .where('tags', arrayContainsAny: [
+                              adminController
+                                  .searchUserController.text.removeAllWhitespace
+                                  .toUpperCase(),
+                            ]).get(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                List<UserModel> users = snapshot.data!.docs
+                                    .map((m) => UserModel.fromJson(m.data()))
+                                    .toList();
+
+                                if (users.isEmpty) {
+                                  return Center(
+                                      child: Text(
+                                    'no_data_found'.tr,
+                                  ));
+                                }
+                                return ListView.builder(
+                                  itemCount: users.length,
+                                  itemBuilder: (context, index) {
+                                    UserModel user = users[index];
+                                    return Card(
+                                      child: ListTile(
+                                        onTap: () async {
+                                          await Get.to(() => UserDetailsScreen(
+                                              userData: user));
+                                          controller.updateUI();
+                                        },
+                                        title: Text(user.name),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                              return const CustomLoading();
+                            },
+                          )
+                        : PaginateFirestore(
+                            onEmpty: SizedBox(
+                              height: Get.height * 0.75,
+                              child: Center(
+                                  child: Text(
+                                'no_data_found'.tr,
+                              )),
+                            ),
+                            initialLoader: SizedBox(
+                                height: Get.height * 0.75,
+                                child: const CustomLoading()),
+                            itemBuilder: (context, documentSnapshots, index) {
+                              UserModel user = UserModel.fromJson(
+                                  documentSnapshots[index].data() as Map);
+                              return Card(
+                                child: ListTile(
+                                  onTap: () async {
+                                    await Get.to(() =>
+                                        UserDetailsScreen(userData: user));
+                                    controller.updateUI();
+                                  },
+                                  title: Text(user.name),
+                                ),
+                              );
+                            },
+                            query: firestore
+                                .collection('users')
+                                .where('type', isEqualTo: 'user'),
+                            itemBuilderType: PaginateBuilderType.listView,
+                            isLive: true,
+                          ))
               ],
             ),
           );
