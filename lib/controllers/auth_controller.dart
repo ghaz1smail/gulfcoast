@@ -12,6 +12,7 @@ class AuthController extends GetxController {
       passwordController = TextEditingController();
   UserModel? userData;
   bool loading = false, admin = false;
+  RxBool deleting = false.obs;
   AppModel appData = AppModel();
 
   checkUserAvailable() async {
@@ -262,5 +263,16 @@ class AuthController extends GetxController {
   setLoading(bool x) {
     loading = x;
     update();
+  }
+
+  deleteAccount() async {
+    deleting.value = true;
+    update();
+    await firestore
+        .collection('users')
+        .doc(userData!.uid)
+        .update({'deleted': true});
+    logOut();
+    deleting.value = false;
   }
 }

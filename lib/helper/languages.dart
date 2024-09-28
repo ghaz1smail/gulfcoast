@@ -117,6 +117,8 @@ class Languages extends Translations {
           'the_car_is_already_exists': 'The car is already exists',
           'welcome_back': 'Welcome back',
           'or': 'OR',
+          'are_you_sure_to_delete_your_account':
+              'Are you sure to delete your account?',
         },
       };
 }

@@ -32,17 +32,29 @@ class AddUserScreen extends StatelessWidget {
                     adminController.changeNameText(x);
                   },
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
                 CustomTextField(
                   hint: 'username',
                   controller: adminController.userUsername,
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 CustomTextField(
                   hint: 'password',
                   controller: adminController.userPassword,
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
                 CustomTextField(
                   hint: 'company',
                   controller: adminController.userCompany,
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 CustomTextField(
                   hint: 'phone',

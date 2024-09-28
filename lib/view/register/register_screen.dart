@@ -24,6 +24,15 @@ class RegisterScreen extends StatelessWidget {
             builder: (controller) {
               return Stack(
                 children: [
+                  SafeArea(
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Image.asset(
+                        appAssets.logo,
+                        height: 100,
+                      ),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: ClipPath(
