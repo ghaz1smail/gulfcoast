@@ -4,13 +4,15 @@ class AppModel {
   final String ios;
   final String vehicledatabases;
   final List? locations;
+  final bool showSignUp;
 
   AppModel(
       {this.server = false,
       this.admin = '',
       this.ios = '',
       this.locations,
-      this.vehicledatabases = ''});
+      this.vehicledatabases = '',
+      this.showSignUp = false});
 
   factory AppModel.fromJson(Map json) {
     return AppModel(
@@ -18,6 +20,7 @@ class AppModel {
         admin: json['admin'] ?? '',
         ios: json['ios'] ?? '',
         vehicledatabases: json['vehicledatabases'] ?? '',
-        locations: json['locations'] ?? []);
+        locations: json['locations'] ?? [],
+        showSignUp: json['showSignUp'] ?? false);
   }
 }

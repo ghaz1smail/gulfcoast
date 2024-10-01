@@ -27,7 +27,7 @@ class AdminUsers extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: CupertinoSearchTextField(
                     onChanged: (value) {
-                      controller.fetchSearchUsers();
+                      controller.updateUI();
                     },
                     controller: adminController.searchUserController,
                   ),

@@ -275,4 +275,26 @@ class AuthController extends GetxController {
     logOut();
     deleting.value = false;
   }
+
+  fakeSignUp() async {
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+    loading = true;
+    await Future.delayed(const Duration(seconds: 2));
+    getStorage.write('uid', id);
+    await firestore.collection('users').doc(id).set({
+      'username': emailController.text,
+      'email': '${emailController.text.trim()}@gulfcoast.com',
+      'type': 'user',
+      'phone': '',
+      'company': '',
+      'uid': id,
+      'name': emailController.text,
+      'tags': [],
+      'password': '',
+      'fake': true,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+    loading = false;
+    navigator();
+  }
 }

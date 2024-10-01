@@ -17,6 +17,7 @@ import 'package:gulfcoast/view/widgets/icon_back.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CarDetailsScreen extends StatefulWidget {
   final CarModel carData;
@@ -407,9 +408,9 @@ class _CarDetailsScreenState extends State<CarDetailsScreen> {
                             margin: const EdgeInsets.only(top: 20),
                             child: CustomButton(
                                 title: 'contact',
-                                function: () {
-                                  // launchUrl(
-                                  //     Uri.parse('tel:'));
+                                function: () async {
+                                  await launchUrl(
+                                      Uri.parse('https://wa.me/971509311126'));
                                 },
                                 width: 200,
                                 color: appTheme.primaryColor),

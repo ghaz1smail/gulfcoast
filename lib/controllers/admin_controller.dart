@@ -208,22 +208,6 @@ class AdminController extends GetxController {
     update();
   }
 
-  fetchSearchUsers() async {
-    final querySnapshot = await firestore.collection('users').where('tags',
-        arrayContainsAny: [
-          searchCarController.text.removeAllWhitespace.toLowerCase()
-        ]).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      searchUsers = querySnapshot.docs
-          .map((doc) => UserModel.fromJson(doc.data()))
-          .toList();
-    } else {
-      searchUsers = [];
-    }
-    update();
-  }
-
   checkUserRoute({bool updateData = true}) async {
     checking = true;
     if (updateData) {

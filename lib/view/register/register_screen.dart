@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gulfcoast/controllers/auth_controller.dart';
 import 'package:gulfcoast/helper/get_initial.dart';
+import 'package:gulfcoast/view/register/sign_up.dart';
 import 'package:gulfcoast/view/register/water_effect.dart';
 import 'package:gulfcoast/view/widgets/custom_button.dart';
 import 'package:gulfcoast/view/widgets/custom_scroll_bar.dart';
@@ -147,6 +148,23 @@ class RegisterScreen extends StatelessWidget {
                                                 },
                                                 child: Text(
                                                   'continue_as_guest'.tr,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: appTheme
+                                                          .primaryColor),
+                                                )),
+                                          ),
+                                        if (authController.appData.showSignUp)
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: TextButton(
+                                                onPressed: () async {
+                                                  Get.to(() =>
+                                                      const SignUpScreen());
+                                                },
+                                                child: Text(
+                                                  'Sign up'.tr,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w600,
